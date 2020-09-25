@@ -1,0 +1,188 @@
+{
+    "name": "test",
+    "parameter": {
+        "DWIDTH": [
+            "16",
+            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
+        ],
+        "AWIDTH": [
+            "16",
+            "\u4e3bcache\u5730\u5740\u603b\u7ebf\u4f4d\u5bbd"
+        ],
+        "OWIDTH": [
+            "8",
+            "\u4e34\u65f6cache\u5730\u5740\u603b\u7ebf\u4f4d\u5bbd"
+        ],
+        "PWIDTH": [
+            "4",
+            "PE\u9635\u5217\u5730\u5740\u4f4d\u5bbd\uff08log_2(PE\\_ROW)\uff09"
+        ],
+        "PE_ROW": [
+            "12",
+            "PE\u9635\u5217\u7684\u884c\u6570\uff0c\u4e0ePE\u9635\u5217\u5217\u6570\u76f8\u7b49"
+        ],
+        "PE_COL": [
+            "12",
+            "PE\u9635\u5217\u7684\u5217\u6570\uff0c\u4e0ePE\u9635\u5217\u884c\u6570\u76f8\u7b49"
+        ]
+    },
+    "port": {
+        "clk": [
+            "input",
+            "1",
+            "\u7cfb\u7edf\u65f6\u949f"
+        ],
+        "rst_n": [
+            "input",
+            "1",
+            "\u7cfb\u7edf\u590d\u4f4d\u4fe1\u53f7\uff0c\u4f4e\u6709\u6548"
+        ],
+        "cfg_valid": [
+            "input",
+            "1",
+            "\u6307\u4ee4\u8f93\u5165\u6709\u6548\u4fe1\u53f7\uff0c\u9ad8\u6709\u6548"
+        ],
+        "cfg_busy": [
+            "output",
+            "1",
+            "\u6307\u4ee4\u6b63\u5728\u6267\u884c\u4fe1\u53f7\uff0c\u9ad8\u8868\u793a\u6b63\u5728\u6267\u884c\u6307\u4ee4"
+        ],
+        "cfg_data_data": [
+            "input",
+            "DATA_CWIDTH",
+            "\u6570\u636e\u51c6\u5907\u90e8\u5206\u6307\u4ee4"
+        ],
+        "cfg_wicp_data": [
+            "input",
+            "WICP_CWIDTH",
+            "\u6743\u503c-\u8ba1\u7b97\u90e8\u5206\u6307\u4ee4"
+        ],
+        "cfg_tmpc_data": [
+            "input",
+            "TMPC_CWIDTH",
+            "\u4e34\u65f6cache\u90e8\u5206\u6307\u4ee4"
+        ],
+        "cfg_post_data": [
+            "input",
+            "POST_CWIDTH",
+            "\u540e\u5904\u7406\u90e8\u5206\u6307\u4ee4"
+        ],
+        "outside_memory_addr": [
+            "input",
+            "AWIDTH",
+            "\u5916\u90e8\u5b58\u50a8\u5668\u8bbf\u95ee\u7aef\u53e3"
+        ],
+        "outside_memory_wreq": [
+            "input",
+            "1",
+            "\u5916\u90e8\u5b58\u50a8\u5668\u5199\u8bf7\u6c42\uff0c\u9ad8\u6709\u6548"
+        ],
+        "outside_memory_din": [
+            "input",
+            "DWIDTH * PE_ROW\u200b",
+            "\u5916\u90e8\u5b58\u50a8\u5668\u5199\u6570\u636e"
+        ],
+        "outside_memory_dout": [
+            "output",
+            "DWIDTH * PE_ROW\u200b",
+            "\u5916\u90e8\u5b58\u50a8\u5668\u8bfb\u6570\u636e"
+        ]
+    },
+    "link": {
+        "inst_test_a": {
+            "module": "test_dout",
+            "port": {
+                "clk": [
+                    "input",
+                    "1"
+                ],
+                "rst_n": [
+                    "input",
+                    "1"
+                ],
+                "dout_valid": [
+                    "output",
+                    "1",
+                    [
+                        "inst_test_b",
+                        "din_valid"
+                    ],
+                    [
+                        "inst_test_c",
+                        "din_valid"
+                    ]
+                ],
+                "dout_data": [
+                    "output",
+                    "DWIDTH",
+                    [
+                        "inst_test_b",
+                        "din_data"
+                    ],
+                    [
+                        "inst_test_c",
+                        "din_data"
+                    ]
+                ]
+            }
+        },
+        "inst_test_b": {
+            "module": "test_din",
+            "port": {
+                "clk": [
+                    "input",
+                    "1"
+                ],
+                "rst_n": [
+                    "input",
+                    "1"
+                ],
+                "din_valid": [
+                    "input",
+                    "1",
+                    [
+                        "inst_test_a",
+                        "dout_valid"
+                    ]
+                ],
+                "din_data": [
+                    "input",
+                    "DWIDTH",
+                    [
+                        "inst_test_a",
+                        "dout_data"
+                    ]
+                ]
+            }
+        },
+        "inst_test_c": {
+            "module": "test_din",
+            "port": {
+                "clk": [
+                    "input",
+                    "1"
+                ],
+                "rst_n": [
+                    "input",
+                    "1"
+                ],
+                "din_valid": [
+                    "input",
+                    "1",
+                    [
+                        "inst_test_a",
+                        "dout_valid"
+                    ]
+                ],
+                "din_data": [
+                    "input",
+                    "DWIDTH",
+                    [
+                        "inst_test_a",
+                        "dout_data"
+                    ]
+                ]
+            }
+        }
+    }
+}

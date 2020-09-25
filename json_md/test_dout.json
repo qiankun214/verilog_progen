@@ -1,0 +1,31 @@
+{
+    "name": "test_dout",
+    "parameter": {
+        "DWIDTH": [
+            "16",
+            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
+        ]
+    },
+    "port": {
+        "clk": [
+            "input",
+            "1",
+            "\u7cfb\u7edf\u65f6\u949f"
+        ],
+        "rst_n": [
+            "input",
+            "1",
+            "\u7cfb\u7edf\u590d\u4f4d\u4fe1\u53f7\uff0c\u4f4e\u6709\u6548"
+        ],
+        "dout_valid": [
+            "output",
+            "1",
+            "\u8f93\u51fa\u6709\u6548\u7aef\u53e3"
+        ],
+        "dout_data": [
+            "output",
+            "DWIDTH",
+            "\u8f93\u51fa\u6570\u636e\u7aef\u53e3"
+        ]
+    }
+}
