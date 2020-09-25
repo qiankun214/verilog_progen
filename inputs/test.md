@@ -40,4 +40,13 @@
 
 # link
 
-none
+| 模块名    | 实例化名    |
+| --------- | ----------- |
+| test_dout | inst_test_a |
+| test_in   | inst_test_b |
+| test_in   | inst_test_c |
+
+- test_a.dout_valid <> test_b.din_valid
+- test_a.dout_data <> test_b.din_data
+- test_a.dout_valid <> test_c.din_valid
+- test_a.dout_data <> test_c.din_data
