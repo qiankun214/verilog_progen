@@ -68,11 +68,13 @@ class md2json(object):
             self.js_data['port'][line[0]] = line[1:]
 
     def _link_handle(self):
+        if self.data_link is None:
+            return
         inst_list,link_list = [],[]
         # handle text
         for i in self.data_link.split("\n"):
             line = re.sub(r'\s',"",i)
-            print(line)
+            # print(line)
             if len(line) == 0:
                 continue
             elif line[0] == "|":
@@ -86,22 +88,34 @@ class md2json(object):
                 this_info = json.load(f)
                 # print(this_info)
             port_info = this_info['port']
+            para_info = this_info['parameter']
             for key in port_info:
                 port_info[key] = port_info[key][:2]
-            link[inst] = {"module":module,"port":port_info}
-        
-        # print(link)
-        for p00,p11 in link_list:
-            p0 = p00.split(".")
-            if "." in p11:
-                p1 = p11.split(".")
-                # print(p0,p1)
-                link[p0[0]]["port"][p0[1]].append(p1)
-                # print(link[p1[0]]["port"][p1[1]],p0)
-                link[p1[0]]["port"][p1[1]].append(p0)
-            # print(p0,p1)
+            for key in para_info:
+                para_info[key] = para_info[key][0]
+            link[inst] = {"module":module,"port":port_info,"parameter":para_info}
+
+        link = {'submodule':link,'link':link_list}
         self.js_data['link'] = link
-        
+        self._check_link(link_list)
+
+    def _check_link(self,link_list):
+        for index,i in enumerate(link_list):
+            p0_mod,p0_name = i[0].split(".")
+            p0_type,p0_width = self.js_data['link']['submodule'][p0_mod]['port'][p0_name]
+
+            p1_mod,p1_name = i[1].split(".")
+            p1_type,p1_width = self.js_data['link']['submodule'][p1_mod]['port'][p1_name]
+
+            if "output" in p1_type and "output" in p0_type:
+                raise TypeError("link {} and {} type error(output)".format(*i))
+            if "input" in p1_type and "input" in p0_type:
+                raise TypeError("link {} and {} type error(input)".format(*i))
+            if p1_width != p0_width:
+                print("WARING:{}'s width {} not match {}'s width {}".format(p0_name,p0_width,p1_name,p1_width))
+
+            if "output" in p0_type:
+                link_list[index] = i[::-1]
     def __call__(self):
         self.read()
         self._paramter_table()

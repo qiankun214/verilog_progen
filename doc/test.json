@@ -89,100 +89,88 @@
         ]
     },
     "link": {
-        "inst_test_a": {
-            "module": "test_dout",
-            "port": {
-                "clk": [
-                    "input",
-                    "1"
-                ],
-                "rst_n": [
-                    "input",
-                    "1"
-                ],
-                "dout_valid": [
-                    "output",
-                    "1",
-                    [
-                        "inst_test_b",
-                        "din_valid"
+        "submodule": {
+            "inst_test_a": {
+                "module": "test_dout",
+                "port": {
+                    "clk": [
+                        "input",
+                        "1"
                     ],
-                    [
-                        "inst_test_c",
-                        "din_valid"
-                    ]
-                ],
-                "dout_data": [
-                    "output",
-                    "DWIDTH",
-                    [
-                        "inst_test_b",
-                        "din_data"
+                    "rst_n": [
+                        "input",
+                        "1"
                     ],
-                    [
-                        "inst_test_c",
-                        "din_data"
+                    "dout_valid": [
+                        "output",
+                        "1"
+                    ],
+                    "dout_data": [
+                        "output",
+                        "DWIDTH"
                     ]
-                ]
+                }
+            },
+            "inst_test_b": {
+                "module": "test_din",
+                "port": {
+                    "clk": [
+                        "input",
+                        "1"
+                    ],
+                    "rst_n": [
+                        "input",
+                        "1"
+                    ],
+                    "din_valid": [
+                        "input",
+                        "1"
+                    ],
+                    "din_data": [
+                        "input",
+                        "DWIDTH"
+                    ]
+                }
+            },
+            "inst_test_c": {
+                "module": "test_din",
+                "port": {
+                    "clk": [
+                        "input",
+                        "1"
+                    ],
+                    "rst_n": [
+                        "input",
+                        "1"
+                    ],
+                    "din_valid": [
+                        "input",
+                        "1"
+                    ],
+                    "din_data": [
+                        "input",
+                        "DWIDTH"
+                    ]
+                }
             }
         },
-        "inst_test_b": {
-            "module": "test_din",
-            "port": {
-                "clk": [
-                    "input",
-                    "1"
-                ],
-                "rst_n": [
-                    "input",
-                    "1"
-                ],
-                "din_valid": [
-                    "input",
-                    "1",
-                    [
-                        "inst_test_a",
-                        "dout_valid"
-                    ]
-                ],
-                "din_data": [
-                    "input",
-                    "DWIDTH",
-                    [
-                        "inst_test_a",
-                        "dout_data"
-                    ]
-                ]
-            }
-        },
-        "inst_test_c": {
-            "module": "test_din",
-            "port": {
-                "clk": [
-                    "input",
-                    "1"
-                ],
-                "rst_n": [
-                    "input",
-                    "1"
-                ],
-                "din_valid": [
-                    "input",
-                    "1",
-                    [
-                        "inst_test_a",
-                        "dout_valid"
-                    ]
-                ],
-                "din_data": [
-                    "input",
-                    "DWIDTH",
-                    [
-                        "inst_test_a",
-                        "dout_data"
-                    ]
-                ]
-            }
-        }
+        "link": [
+            [
+                "inst_test_a.dout_valid",
+                "inst_test_b.din_valid"
+            ],
+            [
+                "inst_test_a.dout_data",
+                "inst_test_b.din_data"
+            ],
+            [
+                "inst_test_a.dout_valid",
+                "inst_test_c.din_valid"
+            ],
+            [
+                "inst_test_a.dout_data",
+                "inst_test_c.din_data"
+            ]
+        ]
     }
 }

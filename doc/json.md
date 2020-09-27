@@ -20,6 +20,7 @@ json定义模块信息需要包括以下方面：
 - 基本信息：模块名称
 - parameter：模块外部可变参数信息，包括名称
 - port：模块端口信息，包括端口类型、参数和名称（描述以注释的方式存在）
+- link:子模块调用相关信息
 
 其中，基本信息以文件名的方式提供，其他包括在md文件中
 
@@ -68,7 +69,16 @@ json定义模块信息需要包括以下方面：
 
 # link
 
-none
+| 实例化名    | 模块名    |
+| ----------- | --------- |
+| inst_test_a | test_dout |
+| inst_test_b | test_din   |
+| inst_test_c | test_din   |
+
+- inst_test_a.dout_valid <> inst_test_b.din_valid
+- inst_test_a.dout_data <> inst_test_b.din_data
+- inst_test_a.dout_valid <> inst_test_c.din_valid
+- inst_test_a.dout_data <> inst_test_c.din_data
 ```
 
 对应的markdown包括三块内容，分别是parameter信息、port信息和link信息。parameter信息和port信息均以markdown表格语法存储，表头信息而言：
@@ -76,6 +86,10 @@ none
 - port：表头顺序为名称、类型、位宽和说明
 
 需要注意的是，名称和说明栏类型为string，位宽为数字表达式，可以使用parameter部分定义的参数。link部分使用专门格式编写，用于描述子模块和连接关系，若没有调用子模块可以不写。
+调用子模块包括部分包括两个部分：
+
+- 实例化表格：为一个markdown表格，分为两列，第一列为实例化名，第二列为模块名
+- 连接关系：使用`- inst1.port1 <> inst2.port2`表示实例化名为inst1的模块的端口port1和实例化名为inst2的模块的端口port2连接。需要注意的是，若某个端口没指定连接关系且与顶层端口名称相同，则会自动连接
 
 ## json格式
 
@@ -91,6 +105,7 @@ json格式如下所示
     "port":{
         "clk":["input","1","系统时钟"],
         "..."
-    }
+    },
+    "link":{...}
 }
 ```
