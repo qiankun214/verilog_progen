@@ -1,11 +1,5 @@
 {
     "name": "test_din",
-    "parameter": {
-        "DWIDTH": [
-            "16",
-            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
-        ]
-    },
     "port": {
         "clk": [
             "input",
@@ -26,6 +20,12 @@
             "input",
             "DWIDTH",
             "\u8f93\u5165\u6570\u636e\u7aef\u53e3"
+        ]
+    },
+    "parameter": {
+        "DWIDTH": [
+            "16",
+            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
         ]
     }
 }

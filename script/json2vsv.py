@@ -3,13 +3,13 @@ import os
 
 CLOCK_RSTN = """
 wire auto_tb_clock,auto_tb_reset_n;
-inital begin
+initial begin
     auto_tb_clock = 'b0;
     forever begin
         #5 auto_tb_clock = ~auto_tb_clock;
     end
 end
-inital begin
+initial begin
     auto_tb_reset_n = 'b0;
     #2 auto_tb_reset_n = 1'b1;
 end

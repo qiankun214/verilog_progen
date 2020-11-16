@@ -1,6 +1,7 @@
 import re
 import os
 import json
+import collections
 
 class md2json(object):
     
@@ -39,7 +40,7 @@ class md2json(object):
             json.dump(self.js_data,f,indent=4)
 
     def _paramter_table(self):
-        tmp,self.js_data['parameter'] = [],{}
+        tmp,self.js_data['parameter'] = [],collections.OrderedDict()
         # print(self.data_paramter)
         for line in self.data_paramter.split("\n"):
             if "|" in line:
@@ -54,7 +55,7 @@ class md2json(object):
         # print(self.js_data['parameter'])
             
     def _port_table(self):
-        tmp,self.js_data['port'] = [],{}
+        tmp,self.js_data['port'] = [],collections.OrderedDict()
         # print(self.data_paramter)
         for line in self.data_port.split("\n"):
             if "|" in line:

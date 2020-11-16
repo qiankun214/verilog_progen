@@ -2,17 +2,17 @@ module tb_test_din ();
 
 parameter DWIDTH = 16;
 
+logic din_valid;
 logic clk;
 logic rst_n;
-logic din_valid;
 logic [DWIDTH - 1 : 0] din_data;
 
 test_din #(
 	.DWIDTH(DWIDTH)
 ) dut (
+	.din_valid(din_valid),
 	.clk(clk),
 	.rst_n(rst_n),
-	.din_valid(din_valid),
 	.din_data(din_data)
 );
 
