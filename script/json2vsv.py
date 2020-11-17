@@ -2,7 +2,7 @@ import json
 import os
 
 CLOCK_RSTN = """
-wire auto_tb_clock,auto_tb_reset_n;
+logic auto_tb_clock,auto_tb_reset_n;
 initial begin
     auto_tb_clock = 'b0;
     forever begin
