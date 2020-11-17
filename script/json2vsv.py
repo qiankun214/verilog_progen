@@ -78,7 +78,7 @@ class json2vsv(object):
             else:
                 port_list.append("\t{} [{} - 1 : 0] {}".format(port_info[0],port_info[1],port))
         data.append(",\n".join(port_list))
-        data.append("\n);\n{}\n//progen-spilt:work after here\n{}\n\nendmodule".format(self._link_generate(),content))
+        data.append("\n);\n{}\n\n//progen-spilt:work after here\n{}\n\nendmodule".format(self._link_generate(),content))
         self.module_define = "".join(data)
 
     def sv_generate(self,content):
@@ -121,10 +121,10 @@ class json2vsv(object):
             link_list_big += i
         link_text = [self._submodule_gen(key,self.info['link']['submodule'][key],link_list_big) for key in self.info['link']['submodule']]
         link_text.append(self._assign_net())
-        return "\n\n".join(link_text)
+        return "\n".join(link_text)
 
     def _submodule_gen(self,name,minfo,link_list_big):
-        submodule= []
+        submodule= ["\n//link {}".format(name)]
         for key in minfo['parameter']:
             if self.info['parameter'].get(key) is not None:
                 submodule.append('parameter {}_{} = {};'.format(name,key,key))
@@ -136,7 +136,7 @@ class json2vsv(object):
             tmp = "wire"
             if p_width.strip() != "1":
                 tmp += " [{} - 1:0]".format(p_width)
-            tmp += " {}_{};".format(name,port)
+            tmp += " {}_{}".format(name,port)
             if "{}.{}".format(name,port) not in link_list_big and self.info['port'].get(port) is not None:
                 if "input" in p_type:
                     self.info['link']['link'].append(["{}_{}".format(name,port),port])
