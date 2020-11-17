@@ -85,7 +85,7 @@ class md2json(object):
         # build link table
         link = {}
         for inst,module in inst_list[2:]:
-            with open(os.path.join(".","json_md","{}.json".format(module))) as f:
+            with open(os.path.join(".","info","{}.json".format(module))) as f:
                 this_info = json.load(f)
                 # print(this_info)
             port_info = this_info['port']
