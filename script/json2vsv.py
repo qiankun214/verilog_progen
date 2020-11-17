@@ -43,6 +43,13 @@ class json2vsv(object):
         self.ds_path,self.tb_path = self.path_gen(ds_root,tb_root)
         self.module_define = ""
         self.tb_define = ""
+        self.js_handle(js_path)
+
+    def js_handle(self,js_path):
+        self.info['ds_path'] = self.ds_path
+        self.info['tb_path'] = self.tb_path
+        with open(js_path,'w') as f:
+            json.dump(self.info,f,indent=4)
 
     def js_load(self,js_path):
         with open(js_path,'r') as f:
