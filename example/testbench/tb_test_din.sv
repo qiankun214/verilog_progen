@@ -2,28 +2,28 @@ module tb_test_din ();
 
 parameter DWIDTH = 16;
 
-logic din_valid;
-logic clk;
 logic rst_n;
+logic din_valid;
 logic [DWIDTH - 1 : 0] din_data;
+logic clk;
 
 test_din #(
 	.DWIDTH(DWIDTH)
 ) dut (
-	.din_valid(din_valid),
-	.clk(clk),
 	.rst_n(rst_n),
-	.din_data(din_data)
+	.din_valid(din_valid),
+	.din_data(din_data),
+	.clk(clk)
 );
 
-wire auto_tb_clock,auto_tb_reset_n;
-inital begin
+logic auto_tb_clock,auto_tb_reset_n;
+initial begin
     auto_tb_clock = 'b0;
     forever begin
         #5 auto_tb_clock = ~auto_tb_clock;
     end
 end
-inital begin
+initial begin
     auto_tb_reset_n = 'b0;
     #2 auto_tb_reset_n = 1'b1;
 end
@@ -43,7 +43,7 @@ end
 assign clk = auto_tb_clock;
 assign rst_n = auto_tb_reset_n;
 
-// your tb here
+//progen-spilt:work after here
 
 
 endmodule

@@ -1,11 +1,13 @@
 {
     "name": "test_din",
+    "tb_path": "./testbench/tb_test_din.sv",
+    "parameter": {
+        "DWIDTH": [
+            "16",
+            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
+        ]
+    },
     "port": {
-        "clk": [
-            "input",
-            "1",
-            "\u7cfb\u7edf\u65f6\u949f"
-        ],
         "rst_n": [
             "input",
             "1",
@@ -20,12 +22,12 @@
             "input",
             "DWIDTH",
             "\u8f93\u5165\u6570\u636e\u7aef\u53e3"
+        ],
+        "clk": [
+            "input",
+            "1",
+            "\u7cfb\u7edf\u65f6\u949f"
         ]
     },
-    "parameter": {
-        "DWIDTH": [
-            "16",
-            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
-        ]
-    }
+    "ds_path": "./rtl/test_din.v"
 }

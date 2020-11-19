@@ -2,28 +2,28 @@ module tb_test_dout ();
 
 parameter DWIDTH = 16;
 
-logic clk;
 logic rst_n;
-logic dout_valid;
 logic [DWIDTH - 1 : 0] dout_data;
+logic clk;
+logic dout_valid;
 
 test_dout #(
 	.DWIDTH(DWIDTH)
 ) dut (
-	.clk(clk),
 	.rst_n(rst_n),
-	.dout_valid(dout_valid),
-	.dout_data(dout_data)
+	.dout_data(dout_data),
+	.clk(clk),
+	.dout_valid(dout_valid)
 );
 
-wire auto_tb_clock,auto_tb_reset_n;
-inital begin
+logic auto_tb_clock,auto_tb_reset_n;
+initial begin
     auto_tb_clock = 'b0;
     forever begin
         #5 auto_tb_clock = ~auto_tb_clock;
     end
 end
-inital begin
+initial begin
     auto_tb_reset_n = 'b0;
     #2 auto_tb_reset_n = 1'b1;
 end
@@ -43,7 +43,7 @@ end
 assign clk = auto_tb_clock;
 assign rst_n = auto_tb_reset_n;
 
-// your tb here
+//progen-spilt:work after here
 
 
 endmodule

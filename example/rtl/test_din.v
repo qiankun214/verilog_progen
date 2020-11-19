@@ -1,13 +1,14 @@
 module test_din#(
 	parameter DWIDTH = 16
 ) (
-	input din_valid,
-	input clk,
 	input rst_n,
-	input [DWIDTH - 1 : 0] din_data
+	input din_valid,
+	input [DWIDTH - 1 : 0] din_data,
+	input clk
 );
 
-None
-// work here
+
+//progen-spilt:work after here
+
 
 endmodule

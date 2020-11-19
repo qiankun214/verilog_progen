@@ -1,0 +1,4 @@
+./testbench/tb_test.sv
+./rtl/test.v
+./rtl/test_din.v
+./rtl/test_dout.v

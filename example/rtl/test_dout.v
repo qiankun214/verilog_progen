@@ -1,12 +1,14 @@
 module test_dout#(
 	parameter DWIDTH = 16
 ) (
-	input clk,
 	input rst_n,
-	output dout_valid,
-	output [DWIDTH - 1 : 0] dout_data
+	output [DWIDTH - 1 : 0] dout_data,
+	input clk,
+	output dout_valid
 );
 
-// work here
+
+//progen-spilt:work after here
+
 
 endmodule
