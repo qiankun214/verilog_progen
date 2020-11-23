@@ -69,6 +69,7 @@ class md2json(object):
             self.js_data['port'][line[0]] = line[1:]
 
     def _link_handle(self):
+        # print(self.data_link)
         if self.data_link is None:
             return
         inst_list,link_list = [],[]

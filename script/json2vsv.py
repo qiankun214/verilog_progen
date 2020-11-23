@@ -135,7 +135,10 @@ class json2vsv(object):
             p_type,p_width = minfo['port'][port]
             tmp = "wire"
             if p_width.strip() != "1":
-                tmp += " [{}_{} - 1:0]".format(name,p_width)
+                if "`" not in p_width:
+                    tmp += " [{}_{} - 1:0]".format(name,p_width)
+                else:
+                    tmp += " [{} - 1:0]".format(p_width)
             tmp += " {}_{}".format(name,port)
             if "{}.{}".format(name,port) not in link_list_big and self.info['port'].get(port) is not None:
                 if "input" in p_type:
