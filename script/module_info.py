@@ -6,7 +6,7 @@ class module_info(object):
     def __init__(self,json_path):
         super(module_info,self).__init__()
         if isinstance(json_path,str) and os.path.exists(json_path):
-            with open(json_path,'r') as f:
+            with open(json_path,'r',encoding='utf-8') as f:
                 info = json.load(f)
         elif isinstance(json_path,dict):
             info = json_path
@@ -16,10 +16,13 @@ class module_info(object):
 
     def _pre_handle(self,info):
         self.parameter = info["parameter"]
-        self.link = info["link"]
+        if info.get("link") is not None:
+            self.link = info["link"]
+        else:
+            self.link = None
         self.name = info["name"]
-        self.ds_path = info["ds_path"]
-        self.tb_path = info["tb_path"]
+        # self.ds_path = info["ds_path"]
+        # self.tb_path = info["tb_path"]
         
         self.port = info["port"]
         self.input_port,self.output_port = [],[]
@@ -30,11 +33,11 @@ class module_info(object):
                 self.output_port.append(port_name)
 
     def moduledef_gen(self):
-        data = ["module {}".format(self.name),]
+        data = []
         if len(self.parameter) == 0:
-            data.append("(")
+            data.append("module {} (".format(self.name))
         else:
-            data.append("#(")
+            data.append("module {} #(".format(self.name))
             param_list = ["\tparameter {} = {}".format(param,self.parameter[param][0]) for param in self.parameter]
             data.append(",\n".join(param_list))
             data.append(") (")
@@ -91,26 +94,6 @@ class module_info(object):
 
     def design_gen(self,link_text=""):
         pass
-
-class linker(object):
-
-    def __init__(self):
-        super(linker,self).__init__()
-        self.input_port_pool = {}
-        self.output_port_pool = {}
-
-    def input_append(self,name,port_list):
-        pass
-    # {'port name':['inst1','inst2']}
-    def output_append(self,name,port_list):
-        pass
-
-    def generate_assign(self,request):
-        # request:
-            # [
-            #     "inst_test_b.din_valid",
-            #     "inst_test_a.dout_valid"
-            # ],
 
 if __name__=='__main__':
     test = module_info("./example/info/test.json")

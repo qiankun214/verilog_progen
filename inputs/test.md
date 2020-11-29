@@ -50,3 +50,11 @@
 - inst_test_a.dout_data <> inst_test_b.din_data
 - inst_test_a.dout_valid <> inst_test_c.din_valid
 - inst_test_a.dout_data <> inst_test_c.din_data
+
+# 实现细节
+
+啊手动阀手动阀s
+
+# 测试方法
+
+asdfasdfasdfafadsf
