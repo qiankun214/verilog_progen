@@ -1,4 +1,6 @@
 import json
+import os
+from os import path
 # markdown_decoder(path,info_root) : read -> spilt -> decode parameter 
 # -> decode port -> decode inst -> decode link -> link -> write json
 
@@ -73,6 +75,9 @@ class link_decoder(source_decoder):
 class markdown_decoder(object):
 
     def __init__(self):
+        self.name = None
+        self.path = None
+
         self.d_port = port_decoder()
         self.d_param = parameter_decoder()
         self.d_link = link_decoder()
@@ -87,7 +92,15 @@ class markdown_decoder(object):
         self.submodule = None
         self.link = None
 
+        self.add_link = []
+
+    def _get_name(self,path):
+        md_name = os.path.spilt(path)[-1]
+        self.name = os.path.splitext(md_name)[0]
+        self.path = path
+
     def spilt_markdown(self,path):
+        self._get_name(path)
         with open(path,'r',encoding='utf-8') as f:
             content = f.read().strip()
         content = "\n{}".format(content.replace("\u200b",""))
@@ -111,6 +124,28 @@ class markdown_decoder(object):
         self.port = self.d_port.decode(self.c_port)
         self.param = self.d_param.decode(self.c_param)
         self.submodule,self.link = self.d_link.decode(self.c_link)
+
+    def add_link_gen(self,request):
+        self.add_link.append(request)
+
+    def save_info(self,root):
+        path = os.path.join(root,"{}.json".format(self.name))
+        info = {
+            "port":self.port,
+            "param":self.param,
+            "submodule":self.submodule,
+            "link":self.link
+        }
+        with open(path,'w') as f:
+            json.dump(info,f,indent=4)
+
+    def save_md(self,root):
+        alink = ["- {} <> {}".format(*x) for x in self.add_link]
+        alink = "\n".join(alink)
+        content = "\n".join(self.c_othre)
+        content = content.format(link=alink)
+        with open(self.path,'w') as f:
+            f.write(content)
 
 if __name__ == "__main__":
     d = markdown_decoder()
