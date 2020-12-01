@@ -1,11 +1,5 @@
 {
     "name": "test_dout",
-    "parameter": {
-        "DWIDTH": [
-            "16",
-            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
-        ]
-    },
     "port": {
         "clk": [
             "input",
@@ -27,5 +21,16 @@
             "DWIDTH",
             "\u8f93\u51fa\u6570\u636e\u7aef\u53e3"
         ]
-    }
+    },
+    "parameter": {
+        "DWIDTH": [
+            "16",
+            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
+        ]
+    },
+    "submodule": {},
+    "link": [],
+    "unlink": [],
+    "ds_path": "./rtl/test_dout.v",
+    "tb_path": "./testbench/test_dout.sv"
 }

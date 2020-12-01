@@ -16,14 +16,9 @@ class module_info(object):
 
     def _pre_handle(self,info):
         self.parameter = info["parameter"]
-        if info.get("link") is not None:
-            self.link = info["link"]
-        else:
-            self.link = None
+        self.link = info["link"]
         self.name = info["name"]
-        # self.ds_path = info["ds_path"]
-        # self.tb_path = info["tb_path"]
-        
+        self.submodule = info["submodule"]
         self.port = info["port"]
         self.input_port,self.output_port = [],[]
         for port_name in self.port:
@@ -31,6 +26,9 @@ class module_info(object):
                 self.input_port.append(port_name)
             else:
                 self.output_port.append(port_name)
+        self.tb_path = info["tb_path"]
+        self.ds_path = info["ds_path"]
+        self.unlink = info["unlink"]
 
     def moduledef_gen(self):
         data = []
@@ -50,6 +48,7 @@ class module_info(object):
                 port_list.append("\t{} [{} - 1 : 0] {}".format(port_info[0],port_info[1],p))
         data.append(",\n".join(port_list))
         data.append(");")
+        # print(data)
         return "\n".join(data)
 
     def instance_gen(self, inst_name, parent_param={}):
@@ -88,6 +87,18 @@ class module_info(object):
         inst.append(port_text)
         inst.append(");")
         return "\n".join(inst)
+
+    def link_generate(self):
+        result,un_result = [],""
+        for ip,op in self.link:
+            ip,op = ip.split("."),op.split(".")
+            if ip[0] == self.name:
+                ip = [ip[1],]
+            if op[0] == self.name:
+                op = [op[1],]
+            result.append("assign {} = {};".format("_".join(ip),"_".join(op)))
+        un_result = "// this on link:\n\t// {}".format("\n\t//".join(self.unlink))
+        return "\n".join(result),un_result
 
     def testbench_gen(self):
         pass

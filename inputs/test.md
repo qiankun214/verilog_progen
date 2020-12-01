@@ -35,8 +35,8 @@
 | ------------------- | ------ | ---------------- | ------------------------ |
 | outside_memory_addr | input  | AWIDTH           | 外部存储器访问端口       |
 | outside_memory_wreq | input  | 1                | 外部存储器写请求，高有效 |
-| outside_memory_din  | input  | DWIDTH * PE_ROW​ | 外部存储器写数据         |
-| outside_memory_dout | output | DWIDTH * PE_ROW​ | 外部存储器读数据         |
+| outside_memory_din  | input  | DWIDTH * PE_ROW | 外部存储器写数据         |
+| outside_memory_dout | output | DWIDTH * PE_ROW | 外部存储器读数据         |
 
 # link
 
@@ -50,6 +50,14 @@
 - inst_test_a.dout_data <> inst_test_b.din_data
 - inst_test_a.dout_valid <> inst_test_c.din_valid
 - inst_test_a.dout_data <> inst_test_c.din_data
+
+> this is generate by linker
+- inst_test_b.clk <> test.clk
+- inst_test_a.clk <> test.clk
+- inst_test_c.clk <> test.clk
+- inst_test_a.rst_n <> test.rst_n
+- inst_test_b.rst_n <> test.rst_n
+- inst_test_c.rst_n <> test.rst_n
 
 # 实现细节
 

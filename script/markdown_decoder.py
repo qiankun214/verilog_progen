@@ -1,6 +1,6 @@
 import json
 import os
-from os import path
+from os import SEEK_SET, path
 # markdown_decoder(path,info_root) : read -> spilt -> decode parameter 
 # -> decode port -> decode inst -> decode link -> link -> write json
 
@@ -94,8 +94,12 @@ class markdown_decoder(object):
 
         self.add_link = []
 
+        self.ds_path = ""
+        self.tb_path = ""
+        self.unlink = []
+
     def _get_name(self,path):
-        md_name = os.path.spilt(path)[-1]
+        md_name = os.path.split(path)[-1]
         self.name = os.path.splitext(md_name)[0]
         self.path = path
 
@@ -115,10 +119,7 @@ class markdown_decoder(object):
                 self.c_param = part
             elif head == "link":
                 self.c_link = part
-                self.c_othre.append("> this is generate by linker")
-                self.c_othre.append("{link}")
-            else:
-                self.c_othre.append(head)
+                self.c_othre[-1] += "{link}"
 
     def decode(self):
         self.port = self.d_port.decode(self.c_port)
@@ -126,29 +127,49 @@ class markdown_decoder(object):
         self.submodule,self.link = self.d_link.decode(self.c_link)
 
     def add_link_gen(self,request):
-        self.add_link.append(request)
+        self.add_link = request
+
+    def assgin_ds_path(self,root):
+        self.ds_path = os.path.join(root,"{}.v".format(self.name)) 
+
+    def assgin_tb_path(self,root):
+        self.tb_path = os.path.join(root,"tb_{}.sv".format(self.name))
+
+    def assgin_unlink(self,unlink):
+        self.unlink = unlink
+
+    def renew_link(self,link):
+        self.link = link
 
     def save_info(self,root):
         path = os.path.join(root,"{}.json".format(self.name))
         info = {
+            "name":self.name,
             "port":self.port,
-            "param":self.param,
+            "parameter":self.param,
             "submodule":self.submodule,
-            "link":self.link
+            "link":self.link,
+            "unlink":self.unlink,
+            "ds_path":self.ds_path,
+            "tb_path":self.tb_path
         }
         with open(path,'w') as f:
             json.dump(info,f,indent=4)
 
-    def save_md(self,root):
-        alink = ["- {} <> {}".format(*x) for x in self.add_link]
-        alink = "\n".join(alink)
+    def save_md(self):
         content = "\n".join(self.c_othre)
-        content = content.format(link=alink)
+        alink = ["- {} <> {}".format(*x) for x in self.add_link]
+        if len(alink) != 0:
+            alink = ["> this is generate by linker",] + alink + ["",]
+            alink = "\n".join(alink)
+            content = content.format(link=alink)
+        else:
+            content = content.format(link="")
         with open(self.path,'w') as f:
             f.write(content)
 
 if __name__ == "__main__":
     d = markdown_decoder()
-    d.spilt_markdown("./inputs/test_din.md")
+    d.spilt_markdown("./inputs/test.md")
     d.decode()
     print("\n".join(d.c_othre))

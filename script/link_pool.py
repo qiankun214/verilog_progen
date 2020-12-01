@@ -1,5 +1,7 @@
 import os
 import json
+from module_info import module_info
+# from module_info.module_info
 
 class linker(object):
 
@@ -31,7 +33,7 @@ class linker(object):
             self.no_link_port.remove("{}.{}".format(port1_inst,port1_name))
         if "{}.{}".format(port2_inst,port2_name) in self.no_link_port:
             self.no_link_port.remove("{}.{}".format(port2_inst,port2_name))
-        result = "assign {}_{} = {}_{};".format(port1_inst,port1_name,port2_inst,port2_name)
+        result = ["{}.{}".format(port1_inst,port1_name),"{}.{}".format(port2_inst,port2_name)]
         self.assgin_result.append(result)
 
     def check_unlink(self):
@@ -147,3 +149,37 @@ class linker(object):
         if "input" in info1[0]:
             return inst1,port1,inst2,port2
         return inst2,port2,inst1,port1
+
+class markdown_link(object):
+
+    def __init__(self,mk_decoder,info_root):
+        super(markdown_link,self).__init__()
+        self.markdown = mk_decoder
+        self.linker = linker(self.markdown.name)
+        self.linker.port_append(self.markdown.name,self.markdown.port)
+        self.root = info_root
+        self.final_link = []
+        self.add_link = []
+        self.unlink = []
+
+    def analysis_submodule(self):
+        for inst in self.markdown.submodule:
+            module = self.markdown.submodule[inst]
+            minfo = self._info_read(module)
+            self.linker.port_append(inst,minfo.port)
+
+    def _info_read(self,module):
+        path = os.path.join(self.root,"{}.json".format(module))
+        return module_info(path)
+
+    def scan_link(self):
+        for l in self.markdown.link:
+            self.linker.generate_assign(l)
+        self.add_link = self.linker.check_unlink()
+        self.final_link = self.linker.assgin_result
+        self.unlink = list(self.linker.no_link_port)
+
+    def __call__(self):
+        self.analysis_submodule()
+        self.scan_link()
+        return self.final_link,self.add_link,self.unlink

@@ -1,31 +1,5 @@
 {
     "name": "test",
-    "parameter": {
-        "DWIDTH": [
-            "16",
-            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
-        ],
-        "AWIDTH": [
-            "16",
-            "\u4e3bcache\u5730\u5740\u603b\u7ebf\u4f4d\u5bbd"
-        ],
-        "OWIDTH": [
-            "8",
-            "\u4e34\u65f6cache\u5730\u5740\u603b\u7ebf\u4f4d\u5bbd"
-        ],
-        "PWIDTH": [
-            "4",
-            "PE\u9635\u5217\u5730\u5740\u4f4d\u5bbd\uff08log_2(PE\\_ROW)\uff09"
-        ],
-        "PE_ROW": [
-            "12",
-            "PE\u9635\u5217\u7684\u884c\u6570\uff0c\u4e0ePE\u9635\u5217\u5217\u6570\u76f8\u7b49"
-        ],
-        "PE_COL": [
-            "12",
-            "PE\u9635\u5217\u7684\u5217\u6570\uff0c\u4e0ePE\u9635\u5217\u884c\u6570\u76f8\u7b49"
-        ]
-    },
     "port": {
         "clk": [
             "input",
@@ -79,133 +53,100 @@
         ],
         "outside_memory_din": [
             "input",
-            "DWIDTH * PE_ROW\u200b",
+            "DWIDTH * PE_ROW",
             "\u5916\u90e8\u5b58\u50a8\u5668\u5199\u6570\u636e"
         ],
         "outside_memory_dout": [
             "output",
-            "DWIDTH * PE_ROW\u200b",
+            "DWIDTH * PE_ROW",
             "\u5916\u90e8\u5b58\u50a8\u5668\u8bfb\u6570\u636e"
         ]
     },
-    "link": {
-        "submodule": {
-            "inst_test_a": {
-                "module": "test_dout",
-                "port": {
-                    "clk": [
-                        "input",
-                        "1"
-                    ],
-                    "rst_n": [
-                        "input",
-                        "1"
-                    ],
-                    "dout_valid": [
-                        "output",
-                        "1"
-                    ],
-                    "dout_data": [
-                        "output",
-                        "DWIDTH"
-                    ]
-                },
-                "parameter": {
-                    "DWIDTH": "16"
-                }
-            },
-            "inst_test_b": {
-                "module": "test_din",
-                "port": {
-                    "clk": [
-                        "input",
-                        "1"
-                    ],
-                    "rst_n": [
-                        "input",
-                        "1"
-                    ],
-                    "din_valid": [
-                        "input",
-                        "1"
-                    ],
-                    "din_data": [
-                        "input",
-                        "DWIDTH"
-                    ]
-                },
-                "parameter": {
-                    "DWIDTH": "16"
-                }
-            },
-            "inst_test_c": {
-                "module": "test_din",
-                "port": {
-                    "clk": [
-                        "input",
-                        "1"
-                    ],
-                    "rst_n": [
-                        "input",
-                        "1"
-                    ],
-                    "din_valid": [
-                        "input",
-                        "1"
-                    ],
-                    "din_data": [
-                        "input",
-                        "DWIDTH"
-                    ]
-                },
-                "parameter": {
-                    "DWIDTH": "16"
-                }
-            }
-        },
-        "link": [
-            [
-                "inst_test_b.din_valid",
-                "inst_test_a.dout_valid"
-            ],
-            [
-                "inst_test_b.din_data",
-                "inst_test_a.dout_data"
-            ],
-            [
-                "inst_test_c.din_valid",
-                "inst_test_a.dout_valid"
-            ],
-            [
-                "inst_test_c.din_data",
-                "inst_test_a.dout_data"
-            ],
-            [
-                "inst_test_c.rst_n",
-                "test.rst_n"
-            ],
-            [
-                "inst_test_a.rst_n",
-                "test.rst_n"
-            ],
-            [
-                "inst_test_b.clk",
-                "test.clk"
-            ],
-            [
-                "inst_test_c.clk",
-                "test.clk"
-            ],
-            [
-                "inst_test_b.rst_n",
-                "test.rst_n"
-            ],
-            [
-                "inst_test_a.clk",
-                "test.clk"
-            ]
+    "parameter": {
+        "DWIDTH": [
+            "16",
+            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
+        ],
+        "AWIDTH": [
+            "16",
+            "\u4e3bcache\u5730\u5740\u603b\u7ebf\u4f4d\u5bbd"
+        ],
+        "OWIDTH": [
+            "8",
+            "\u4e34\u65f6cache\u5730\u5740\u603b\u7ebf\u4f4d\u5bbd"
+        ],
+        "PWIDTH": [
+            "4",
+            "PE\u9635\u5217\u5730\u5740\u4f4d\u5bbd\uff08log_2(PE\\_ROW)\uff09"
+        ],
+        "PE_ROW": [
+            "12",
+            "PE\u9635\u5217\u7684\u884c\u6570\uff0c\u4e0ePE\u9635\u5217\u5217\u6570\u76f8\u7b49"
+        ],
+        "PE_COL": [
+            "12",
+            "PE\u9635\u5217\u7684\u5217\u6570\uff0c\u4e0ePE\u9635\u5217\u884c\u6570\u76f8\u7b49"
         ]
     },
+    "submodule": {
+        "inst_test_a": "test_dout",
+        "inst_test_b": "test_din",
+        "inst_test_c": "test_din"
+    },
+    "link": [
+        [
+            "inst_test_b.din_valid",
+            "inst_test_a.dout_valid"
+        ],
+        [
+            "inst_test_b.din_data",
+            "inst_test_a.dout_data"
+        ],
+        [
+            "inst_test_c.din_valid",
+            "inst_test_a.dout_valid"
+        ],
+        [
+            "inst_test_c.din_data",
+            "inst_test_a.dout_data"
+        ],
+        [
+            "inst_test_b.clk",
+            "test.clk"
+        ],
+        [
+            "inst_test_a.clk",
+            "test.clk"
+        ],
+        [
+            "inst_test_c.clk",
+            "test.clk"
+        ],
+        [
+            "inst_test_a.rst_n",
+            "test.rst_n"
+        ],
+        [
+            "inst_test_b.rst_n",
+            "test.rst_n"
+        ],
+        [
+            "inst_test_c.rst_n",
+            "test.rst_n"
+        ]
+    ],
+    "unlink": [
+        "test.cfg_data_data",
+        "test.cfg_busy",
+        "test.cfg_wicp_data",
+        "test.cfg_valid",
+        "test.cfg_post_data",
+        "test.outside_memory_wreq",
+        "test.outside_memory_dout",
+        "test.outside_memory_addr",
+        "test.cfg_tmpc_data",
+        "test.outside_memory_din"
+    ],
     "ds_path": "./rtl/test.v",
     "tb_path": "./testbench/tb_test.sv"
 }

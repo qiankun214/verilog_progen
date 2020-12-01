@@ -12,4 +12,3 @@
 | rst_n     | input | 1      | 系统复位信号，低有效 |
 | din_valid | input | 1      | 输入有效端口         |
 | din_data  | input | DWIDTH | 输入数据端口         |
-

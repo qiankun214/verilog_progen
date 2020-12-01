@@ -27,5 +27,10 @@
             "16",
             "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
         ]
-    }
+    },
+    "submodule": {},
+    "link": [],
+    "unlink": [],
+    "ds_path": "./rtl/test_din.v",
+    "tb_path": "./testbench/test_din.sv"
 }

@@ -1,4 +1,5 @@
-module test#(
+// pro-gen:start here,coding before this line
+module test #(
 	parameter DWIDTH = 16,
 	parameter AWIDTH = 16,
 	parameter OWIDTH = 8,
@@ -16,11 +17,15 @@ module test#(
 	input [POST_CWIDTH - 1 : 0] cfg_post_data,
 	input [AWIDTH - 1 : 0] outside_memory_addr,
 	input outside_memory_wreq,
-	input [DWIDTH * PE_ROW​ - 1 : 0] outside_memory_din,
-	output [DWIDTH * PE_ROW​ - 1 : 0] outside_memory_dout
+	input [DWIDTH * PE_ROW - 1 : 0] outside_memory_din,
+	output [DWIDTH * PE_ROW - 1 : 0] outside_memory_dout
 );
+// pro-gen:stop here,coding after this line
 
-//link inst_test_a
+
+// pro-gen:start here,coding before this line
+
+//instance inst_test_a module test_dout
 parameter inst_test_a_DWIDTH = DWIDTH;
 wire inst_test_a_clk;
 wire inst_test_a_rst_n;
@@ -35,7 +40,7 @@ test_dout #(
 	.dout_data(inst_test_a_dout_data)
 );
 
-//link inst_test_b
+//instance inst_test_b module test_din
 parameter inst_test_b_DWIDTH = DWIDTH;
 wire inst_test_b_clk;
 wire inst_test_b_rst_n;
@@ -50,7 +55,7 @@ test_din #(
 	.din_data(inst_test_b_din_data)
 );
 
-//link inst_test_c
+//instance inst_test_c module test_din
 parameter inst_test_c_DWIDTH = DWIDTH;
 wire inst_test_c_clk;
 wire inst_test_c_rst_n;
@@ -64,18 +69,29 @@ test_din #(
 	.din_valid(inst_test_c_din_valid),
 	.din_data(inst_test_c_din_data)
 );
+// link
 assign inst_test_b_din_valid = inst_test_a_dout_valid;
 assign inst_test_b_din_data = inst_test_a_dout_data;
 assign inst_test_c_din_valid = inst_test_a_dout_valid;
 assign inst_test_c_din_data = inst_test_a_dout_data;
-assign inst_test_a_clk = clk;
-assign inst_test_a_rst_n = rst_n;
 assign inst_test_b_clk = clk;
-assign inst_test_b_rst_n = rst_n;
+assign inst_test_a_clk = clk;
 assign inst_test_c_clk = clk;
+assign inst_test_a_rst_n = rst_n;
+assign inst_test_b_rst_n = rst_n;
 assign inst_test_c_rst_n = rst_n;
-
-//progen-spilt:work after here
+// this on link:
+	// test.cfg_data_data
+	//test.cfg_busy
+	//test.cfg_wicp_data
+	//test.cfg_valid
+	//test.cfg_post_data
+	//test.outside_memory_wreq
+	//test.outside_memory_dout
+	//test.outside_memory_addr
+	//test.cfg_tmpc_data
+	//test.outside_memory_din
+// pro-gen:stop here,coding after this line
 
 
 endmodule

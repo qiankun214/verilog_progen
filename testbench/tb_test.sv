@@ -1,45 +1,45 @@
 module tb_test ();
+// pro-gen:start here,coding before this line
 
-parameter DWIDTH = 16;
-parameter AWIDTH = 16;
-parameter OWIDTH = 8;
-parameter PWIDTH = 4;
-parameter PE_ROW = 12;
-parameter PE_COL = 12;
-
-logic clk;
-logic rst_n;
-logic cfg_valid;
-logic cfg_busy;
-logic [DATA_CWIDTH - 1 : 0] cfg_data_data;
-logic [WICP_CWIDTH - 1 : 0] cfg_wicp_data;
-logic [TMPC_CWIDTH - 1 : 0] cfg_tmpc_data;
-logic [POST_CWIDTH - 1 : 0] cfg_post_data;
-logic [AWIDTH - 1 : 0] outside_memory_addr;
-logic outside_memory_wreq;
-logic [DWIDTH * PE_ROW​ - 1 : 0] outside_memory_din;
-logic [DWIDTH * PE_ROW​ - 1 : 0] outside_memory_dout;
-
+//instance dut module test
+parameter dut_DWIDTH = 16; // cannot find,use default
+parameter dut_AWIDTH = 16; // cannot find,use default
+parameter dut_OWIDTH = 8; // cannot find,use default
+parameter dut_PWIDTH = 4; // cannot find,use default
+parameter dut_PE_ROW = 12; // cannot find,use default
+parameter dut_PE_COL = 12; // cannot find,use default
+wire dut_clk;
+wire dut_rst_n;
+wire dut_cfg_valid;
+wire dut_cfg_busy;
+wire [dut_DATA_CWIDTH - 1:0] dut_cfg_data_data;
+wire [dut_WICP_CWIDTH - 1:0] dut_cfg_wicp_data;
+wire [dut_TMPC_CWIDTH - 1:0] dut_cfg_tmpc_data;
+wire [dut_POST_CWIDTH - 1:0] dut_cfg_post_data;
+wire [dut_AWIDTH - 1:0] dut_outside_memory_addr;
+wire dut_outside_memory_wreq;
+wire [dut_DWIDTH * PE_ROW - 1:0] dut_outside_memory_din;
+wire [dut_DWIDTH * PE_ROW - 1:0] dut_outside_memory_dout;
 test #(
-	.DWIDTH(DWIDTH),
-	.AWIDTH(AWIDTH),
-	.OWIDTH(OWIDTH),
-	.PWIDTH(PWIDTH),
-	.PE_ROW(PE_ROW),
-	.PE_COL(PE_COL)
+	.DWIDTH(dut_DWIDTH),
+	.AWIDTH(dut_AWIDTH),
+	.OWIDTH(dut_OWIDTH),
+	.PWIDTH(dut_PWIDTH),
+	.PE_ROW(dut_PE_ROW),
+	.PE_COL(dut_PE_COL)
 ) dut (
-	.clk(clk),
-	.rst_n(rst_n),
-	.cfg_valid(cfg_valid),
-	.cfg_busy(cfg_busy),
-	.cfg_data_data(cfg_data_data),
-	.cfg_wicp_data(cfg_wicp_data),
-	.cfg_tmpc_data(cfg_tmpc_data),
-	.cfg_post_data(cfg_post_data),
-	.outside_memory_addr(outside_memory_addr),
-	.outside_memory_wreq(outside_memory_wreq),
-	.outside_memory_din(outside_memory_din),
-	.outside_memory_dout(outside_memory_dout)
+	.clk(dut_clk),
+	.rst_n(dut_rst_n),
+	.cfg_valid(dut_cfg_valid),
+	.cfg_busy(dut_cfg_busy),
+	.cfg_data_data(dut_cfg_data_data),
+	.cfg_wicp_data(dut_cfg_wicp_data),
+	.cfg_tmpc_data(dut_cfg_tmpc_data),
+	.cfg_post_data(dut_cfg_post_data),
+	.outside_memory_addr(dut_outside_memory_addr),
+	.outside_memory_wreq(dut_outside_memory_wreq),
+	.outside_memory_din(dut_outside_memory_din),
+	.outside_memory_dout(dut_outside_memory_dout)
 );
 
 logic auto_tb_clock,auto_tb_reset_n;
@@ -54,6 +54,7 @@ initial begin
     #2 auto_tb_reset_n = 1'b1;
 end
 
+
 string dump_file;
 initial begin
     `ifdef DUMP
@@ -65,11 +66,11 @@ initial begin
     `endif
 end
 
+
 // assign your clock and reset here
-assign clk = auto_tb_clock;
-assign rst_n = auto_tb_reset_n;
+assign dut_clk = auto_tb_clock;
+assign dut_rst_n = auto_tb_reset_n;
 
-//progen-spilt:work after here
-
+// pro-gen:stop here,coding after this line
 
 endmodule
