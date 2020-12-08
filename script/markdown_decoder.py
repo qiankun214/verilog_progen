@@ -160,7 +160,7 @@ class markdown_decoder(object):
         content = "\n".join(self.c_othre)
         alink = ["- {} <> {}".format(*x) for x in self.add_link]
         if len(alink) != 0:
-            alink = ["> this is generate by linker",] + alink + ["",]
+            alink = ["\n> this is generate by linker",] + alink + ["",]
             alink = "\n".join(alink)
             content = content.format(link=alink)
         else:

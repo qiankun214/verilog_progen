@@ -22,9 +22,9 @@ class depend_detector(object):
         self.depent_list.append(info['ds_path'])
         if info.get("link") is None:
             return
-        for i in info['link']['submodule']:
-            data = info['link']['submodule'][i]
-            submodule_name = data['module']
+        for i in info['submodule']:
+            data = info['submodule'][i]
+            submodule_name = data
             submodule_path = os.path.join(self.info_root,"{}.json".format(submodule_name))
             print("INFO:find module {} depend {}".format(info['name'],submodule_name))
             self._ds_depend_find(self._read_json(submodule_path))

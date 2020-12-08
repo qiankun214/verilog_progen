@@ -57,9 +57,10 @@ class linker(object):
                     continue
                 target = switch_list[int(din)]
                 self.generate_assign(["{}.{}".format(inst,port),"{}.{}".format(target[0],port)])
+                result.append(["{}.{}".format(inst,port),"{}.{}".format(target[0],port)])
             else:
-                self.generate_assign(["{}.{}".format(inst,port),"{}.{}".format(target[0],port)])
-            result.append(["{}.{}".format(inst,port),"{}.{}".format(target[0],port)])
+                self.generate_assign(["{}.{}".format(inst,port),din])
+                result.append(["{}.{}".format(inst,port),din])
         print("WARING:you should link manul:")
         for name in self.no_link_port:
             print("\t{}".format(name))
@@ -77,6 +78,7 @@ class linker(object):
             if inst == port_inst or target_type not in vinfo[0]:
                 continue
             result.append([inst,] + vinfo)
+        # print(self.port_list[port_name],port_name)
         return result
 
     def _get_unlink(self,name):
@@ -113,7 +115,7 @@ class linker(object):
             if self.port_list[port1].get(inst1) is not None:
                 info1 = self.port_list[port1][inst1]
             else:
-                raise ValueError("FATAL:inst {} not exists".format(inst1))
+                raise ValueError("FATAL:port {} not exists in {}".format(port1,inst1))
         else:
             raise ValueError("FATAL:port {} not exists".format(port1))
 
@@ -121,17 +123,17 @@ class linker(object):
             if self.port_list[port2].get(inst2) is not None:
                 info2 = self.port_list[port2][inst2]
             else:
-                raise ValueError("FATAL:inst {} not exists".format(inst2))
+                raise ValueError("FATAL:port {} not exists in inst {}".format(port2, inst2))
         else:
             raise ValueError("FATAL:port {} not exists".format(port2))
 
         # check
-        if (not is_parent) and "input" in info1[0] and "input" in info2[0]:
-            raise ValueError("FATAL:link port type no match,{}.{}({}) not match {}.{}({})".format(
+        if "input" in info1[0] and "input" in info2[0]:
+            raise ValueError("FATAL:(both input)link port type no match,{}.{}({}) not match {}.{}({})".format(
                 inst1,port1,info1[1],inst2,port2,info2[1]
             ))
-        if (not is_parent) and "output" in info1[0] and "output" in info2[0]:
-            raise ValueError("FATAL:link port type no match,{}.{}({}) not match {}.{}({})".format(
+        if "output" in info1[0] and "output" in info2[0]:
+            raise ValueError("FATAL:(both output)link port type no match,{}.{}({}) not match {}.{}({})".format(
                 inst1,port1,info1[1],inst2,port2,info2[1]
             ))
         # if is_parent and "input" in info1[0] and "input" not in info2[0]:
@@ -181,5 +183,6 @@ class markdown_link(object):
 
     def __call__(self):
         self.analysis_submodule()
+        # print(self.linker.port_list)
         self.scan_link()
         return self.final_link,self.add_link,self.unlink

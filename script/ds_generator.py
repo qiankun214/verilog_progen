@@ -43,7 +43,7 @@ class ds_generator(object):
         self.info = info 
         self.content = ""
         self.info_root = info_root
-        self.initial_content = "{}\n{}\nendmodule"
+        self.initial_content = "\n{}\nendmodule"
 
     def get_content(self,ds_path,is_use=True):
         if is_use and os.path.exists(ds_path):
@@ -65,23 +65,23 @@ class ds_generator(object):
                 flag = True
                 continue
 
-            if flag and len(line.strip()) != 0:
+            if flag and LINE_STOP not in line:
                 result.append(line)
         return "\n".join(result)
     
     def get_submodule_link(self):
-        link = [LINE_START]
+        link = []
         for inst in self.info.submodule:
             module = self.info.submodule[inst]
             subm_info_path = os.path.join(self.info_root,"{}.json".format(module))
             subm_info = module_info(subm_info_path)
-            link.append(subm_info.instance_gen(inst,self.info.parameter))
+            link.append(subm_info.instance_gen(inst,self.info.parameter,"wire"))
         link.append("// link")
         line_link,line_unlink = self.info.link_generate()
         link.append(line_link)
         link.append(line_unlink)
         link.append(LINE_STOP)
-        link.append("\n")
+        # link.append("\n")
         # print(link)
         return "\n".join(link)
 
@@ -89,16 +89,16 @@ class ds_generator(object):
         m_def = [
             LINE_START,
             self.info.moduledef_gen(),
-            LINE_STOP,"\n"
+            "\n"
         ]
         return "\n".join(m_def)
 
     def write_ds(self):
+
+        result = self.content.replace("{}",self.get_module_def() + self.get_submodule_link())
+
         with open(self.info.ds_path,'w') as f:
-            f.write(self.content.format(
-                self.get_module_def(),
-                self.get_submodule_link()
-            ))
+            f.write(result)
 
     def __call__(self,is_use):
         self.get_content(self.info.ds_path,is_use)
@@ -111,9 +111,7 @@ class tb_generator(ds_generator):
         super(tb_generator,self).__init__(info,info_root)
         tmp = "module tb_{} ();".format(self.info.name)
         self.initial_content = "\n".join([
-            "module tb_{} ();".format(self.info.name),
             "{}",
-            "",
             "endmodule"
         ])
 
@@ -121,13 +119,14 @@ class tb_generator(ds_generator):
         self.get_content(self.info.tb_path,is_use)
         tmp = "\n".join([
             LINE_START,
-            self.info.instance_gen("dut"),
+            "module tb_{} ();".format(self.info.name),
+            self.info.instance_gen("dut",net_type="logic"),
             CLOCK_RSTN,
             FSDB.format(name=self.info.name),
             CLOCK_ASSIGN,
             LINE_STOP
         ])
         with open(self.info.tb_path,'w') as f:
-            f.write(self.content.format(tmp))
+            f.write(self.content.replace("{}",tmp))
 
 

@@ -51,7 +51,7 @@ class module_info(object):
         # print(data)
         return "\n".join(data)
 
-    def instance_gen(self, inst_name, parent_param={}):
+    def instance_gen(self, inst_name, parent_param={},net_type="wire"):
         inst = ["\n//instance {} module {}".format(inst_name,self.name)]
         # parameter generate
         for key in self.parameter:
@@ -64,7 +64,7 @@ class module_info(object):
         # port generate
         for p in self.port:
             p_type,p_width,_ = self.port[p]
-            tmp = "wire"
+            tmp = net_type
             if p_width.strip() != "1":
                 if "`" not in p_width:
                     tmp += " [{}_{} - 1:0]".format(inst_name,p_width)
