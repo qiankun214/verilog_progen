@@ -20,6 +20,7 @@ class depend_detector(object):
         if info['ds_path'] in self.depent_list:
             return
         self.depent_list.append(info['ds_path'])
+        self.depent_list += info['dependent']
         if info.get("link") is None:
             return
         for i in info['submodule']:
@@ -50,6 +51,7 @@ class depend_detector(object):
 
     def __call__(self,filelist_path,need_sv=True):
         self._ds_depend_find(self.info)
+        # self.depent_list += self.info.dependent
         if need_sv:
             self._sv_depend_find(self.info['tb_path'])
         self._write(filelist_path,need_sv)

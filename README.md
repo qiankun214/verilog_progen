@@ -20,6 +20,7 @@ md定义模块信息需要包括以下方面：
 - parameter：模块外部可变参数信息，包括名称
 - port：模块端口信息，包括端口类型、参数和名称（描述以注释的方式存在）
 - link: 描述链接信息，包括子模块，连线等
+- dependent: 描述依赖的文件，如不适用link自动例化的模块文件
 
 其中，基本信息以文件名的方式提供，其他包括在md文件中，一个例子如下所示：
 
@@ -65,6 +66,10 @@ md定义模块信息需要包括以下方面：
 | outside_memory_din  | input  | DWIDTH * PE_ROW​ | 外部存储器写数据         |
 | outside_memory_dout | output | DWIDTH * PE_ROW​ | 外部存储器读数据         |
 
+# dependent
+
+- ./rtl/testtest.v
+
 # link
 
 | 实例化名    | 模块名    |
@@ -80,9 +85,11 @@ md定义模块信息需要包括以下方面：
 
 ```
 
-对应的markdown包括三块内容，分别是parameter信息、port信息和link信息。parameter信息和port信息均以markdown表格语法存储，表头信息而言：
+对应的markdown包括四块内容，分别是parameter信息、port信息、dependent信息和link信息。parameter信息和port信息均以markdown表格语法存储，表头信息而言：
 - parameter：表头顺序为名称、说明和默认值，顺序不可改变
 - port：表头顺序为名称、类型、位宽和说明
+
+dependent使用markdown中的无序列表描述，需要直接给出文件路径，系统在进行生成时会检查该文件是否存在，因此需要在生成前将依赖文件放置在指定的位置。
 
 需要注意的是，名称和说明栏类型为string，位宽为数字表达式，可以使用parameter部分定义的参数。link部分使用专门格式编写，用于描述子模块和连接关系，若没有调用子模块可以不写，link部分包括一个表格和链接关系描述符：
 - 表格：为实例化名-模块名的对用关系，模块必须由progen生成过（info文件夹中有对用的json文件）
@@ -94,9 +101,15 @@ md定义模块信息需要包括以下方面：
 生成的Verilog中会包含以下一句注释：
 
 ```
-//progen-spilt:work after here
+// pro-gen:start here,coding before this line
 ```
-这是用于标注progen生成的结束位置，请务必在这句注释下方进行代码编写，该语句上方的代码会在更行时被删除。
+这是用于标注progen生成的开始位置，请务必在这句注释上方进行代码编写，该语句下方的代码会在更新时被删除。还会包括以下注释：
+
+```
+// pro-gen:stop here,coding after this line
+```
+
+这是用于标注progen生成的结束位置，请务必在这句注释下方进行代码编写，该语句上方的代码会在更新时被删除。
 
 # filelist生成
 

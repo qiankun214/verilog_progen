@@ -29,6 +29,7 @@ class module_info(object):
         self.tb_path = info["tb_path"]
         self.ds_path = info["ds_path"]
         self.unlink = info["unlink"]
+        self.dependent = info["dependent"]
 
     def moduledef_gen(self):
         data = []

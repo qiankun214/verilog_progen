@@ -1,11 +1,12 @@
 {
+    "parameter": {
+        "DWIDTH": [
+            "16",
+            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
+        ]
+    },
     "name": "test_dout",
     "port": {
-        "clk": [
-            "input",
-            "1",
-            "\u7cfb\u7edf\u65f6\u949f"
-        ],
         "rst_n": [
             "input",
             "1",
@@ -16,21 +17,21 @@
             "1",
             "\u8f93\u51fa\u6709\u6548\u7aef\u53e3"
         ],
+        "clk": [
+            "input",
+            "1",
+            "\u7cfb\u7edf\u65f6\u949f"
+        ],
         "dout_data": [
             "output",
             "DWIDTH",
             "\u8f93\u51fa\u6570\u636e\u7aef\u53e3"
         ]
     },
-    "parameter": {
-        "DWIDTH": [
-            "16",
-            "\u5355\u4e2a\u6570\u636e\u4f4d\u5bbd"
-        ]
-    },
-    "submodule": {},
     "link": [],
-    "unlink": [],
     "ds_path": "./rtl/test_dout.v",
-    "tb_path": "./testbench/test_dout.sv"
+    "dependent": [],
+    "unlink": [],
+    "tb_path": "./testbench/tb_test_dout.sv",
+    "submodule": {}
 }

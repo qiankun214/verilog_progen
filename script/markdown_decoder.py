@@ -1,6 +1,6 @@
 import json
 import os
-from os import SEEK_SET, path
+# from os import SEEK_SET, path
 # markdown_decoder(path,info_root) : read -> spilt -> decode parameter 
 # -> decode port -> decode inst -> decode link -> link -> write json
 
@@ -35,6 +35,8 @@ class parameter_decoder(source_decoder):
         parameter_list = self.table_handle(content)
         result = {}
         for name,comment,defaultnum in parameter_list:
+            if result.get(name) is not None:
+                raise ValueError("FATAL:parameter {} is mult define".format(name))
             result[name] = [defaultnum,comment]
         return result
 
@@ -47,7 +49,27 @@ class port_decoder(source_decoder):
         port_list = self.table_handle(content)
         result = {}
         for name,dtype,width,comment in port_list:
+            if result.get(name) is not None:
+                raise ValueError("FATAL:port {} is mult define")
             result[name] = [dtype,width,comment]
+        return result
+
+class dependent_decoder(source_decoder):
+    
+    def __init__(self):
+        super(dependent_decoder,self).__init__()
+
+    def decode(self, content):
+        result = []
+        for line in content:
+            l = line.strip()
+            if len(l) == 0:
+                continue
+            if l[0] == "-":
+                dependent = l[1:].strip()
+                if not os.path.exists(dependent):
+                    raise ValueError("FATAL:dependent file {} not exists".format(dependent))
+                result.append(dependent)
         return result
 
 class link_decoder(source_decoder):
@@ -81,15 +103,18 @@ class markdown_decoder(object):
         self.d_port = port_decoder()
         self.d_param = parameter_decoder()
         self.d_link = link_decoder()
+        self.d_depen = dependent_decoder()
 
         self.c_port = ""
         self.c_param = ""
         self.c_link = ""
+        self.c_depen = ""
         self.c_othre = []
 
         self.port = None
         self.param = None
         self.submodule = None
+        self.dependent = None
         self.link = None
 
         self.add_link = []
@@ -117,6 +142,8 @@ class markdown_decoder(object):
                 self.c_port = part
             elif head == "parameter":
                 self.c_param = part
+            elif head == "dependent":
+                self.c_depen = part
             elif head == "link":
                 self.c_link = part
                 self.c_othre[-1] += "{link}"
@@ -125,6 +152,7 @@ class markdown_decoder(object):
         self.port = self.d_port.decode(self.c_port)
         self.param = self.d_param.decode(self.c_param)
         self.submodule,self.link = self.d_link.decode(self.c_link)
+        self.dependent = self.d_depen.decode(self.c_depen)
 
     def add_link_gen(self,request):
         self.add_link = request
@@ -147,6 +175,7 @@ class markdown_decoder(object):
             "name":self.name,
             "port":self.port,
             "parameter":self.param,
+            "dependent":self.dependent,
             "submodule":self.submodule,
             "link":self.link,
             "unlink":self.unlink,

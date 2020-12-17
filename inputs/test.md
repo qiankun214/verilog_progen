@@ -38,24 +38,21 @@
 | outside_memory_din  | input  | DWIDTH * PE_ROW | 外部存储器写数据         |
 | outside_memory_dout | output | DWIDTH * PE_ROW | 外部存储器读数据         |
 
+# dependent
+
+- ./rtl/test_dout.v
+
 # link
 
 | 实例化名    | 模块名    |
 | ----------- | --------- |
-| inst_test_a | test_dout |
 | inst_test_b | test_din   |
 | inst_test_c | test_din   |
 
-- inst_test_a.dout_valid <> inst_test_b.din_valid
-- inst_test_a.dout_data <> inst_test_b.din_data
-- inst_test_a.dout_valid <> inst_test_c.din_valid
-- inst_test_a.dout_data <> inst_test_c.din_data
 
 > this is generate by linker
 - inst_test_b.clk <> test.clk
-- inst_test_a.clk <> test.clk
 - inst_test_c.clk <> test.clk
-- inst_test_a.rst_n <> test.rst_n
 - inst_test_b.rst_n <> test.rst_n
 - inst_test_c.rst_n <> test.rst_n
 
