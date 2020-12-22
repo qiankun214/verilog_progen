@@ -25,6 +25,7 @@ def markdown_analysis(path,rtl_root="./rtl",tb_root="./testbench",info_root="./i
     decoder.assgin_tb_path(tb_root)
 
     decoder.save_info(info_root)
+    # print("q")
     decoder.save_md()
     return decoder.name
 

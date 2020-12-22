@@ -1,5 +1,6 @@
 import json
 import os
+from os.path import split
 import re
 import argparse
 
@@ -20,15 +21,24 @@ class depend_detector(object):
         if info['ds_path'] in self.depent_list:
             return
         self.depent_list.append(info['ds_path'])
-        self.depent_list += info['dependent']
         if info.get("link") is None:
             return
         for i in info['submodule']:
             data = info['submodule'][i]
             submodule_name = data
             submodule_path = os.path.join(self.info_root,"{}.json".format(submodule_name))
-            print("INFO:find module {} depend {}".format(info['name'],submodule_name))
+            print("INFO:find module {} depend(module) {}".format(info['name'],submodule_name))
             self._ds_depend_find(self._read_json(submodule_path))
+        for dep in info['dependent']:
+            print("INFO:find module {} depend(file) {}".format(info['name'],dep))
+            dep_file = os.path.split(dep)[-1]
+            dep_name = os.path.splitext(dep_file)[0]
+            dep_info_path = os.path.join(self.info_root,"{}.json".format(dep_name))
+            if not os.path.exists(dep_info_path):
+                print("WARING:info of {} not exists,ignore submodule of it".format(dep))
+                self.depent_list.append(dep)
+                continue
+            self._ds_depend_find(self._read_json(dep_info_path))
 
     def _sv_depend_find(self,path):
         if path in self.sv_depend_list:
@@ -56,6 +66,10 @@ class depend_detector(object):
             self._sv_depend_find(self.info['tb_path'])
         self._write(filelist_path,need_sv)
         print("INFO:filelist of {} generate successful".format(self.info['name']))
+
+    def gen_filelist(self):
+        self._ds_depend_find(self.info)
+        return self.depent_list
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
