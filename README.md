@@ -1,19 +1,19 @@
-# 说明
+# 生成工具
 
 本项目用于直接通过可读的markdown文本生成rtl设计中需要使用的verilog模板和SystemVerilog的TB的模板，后续将添加其他功能。使用方法为按要求编写markdown文本，随后使用如下命令：
 
 ```shell
-python3 <root>/script/progen/progen -m <markdown path> -d <rtl root> -t <tb root>
+python3 <root>/progen/progen -m <markdown path> -d <rtl root> -t <tb root>
 ```
 
 同时可以使用如下指令查询：
 
 ```
-python3 <root>/script/progen/progen -h
+python3 <root>/progen/progen -h
 ```
 
 
-# md格式定义
+## md格式定义
 
 md定义模块信息需要包括以下方面：
 - 基本信息：模块名称
@@ -120,3 +120,81 @@ python3 script/filelistgen.py -v <模块名> -o <输出filelist路径> -t
 ```
 
 其中添加`-t`表示在filelist中增加TB文件路径，用于vcs仿真，不添加则生成全部为rtl文件filelist
+
+# EDA工具
+
+EDA工具提供以下脚本：
+
+- [x] nLint代码风格检查
+- [x] VCS仿真
+- [x] Verdi波形查看
+- [ ] DC综合（正在开发）
+
+## nLint代码检查
+
+nlint进行代码检查，位于`<root>/progen/eda_nlint.py`。运行脚本如下所示：
+
+```
+usage: eda_nlint.py [-h] [-a] [-m] [-p PRE] [-i INFO_ROOT] module
+
+positional arguments:
+  module                module name you want to nlint
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a, --macro           submodule of this module handle as macro cell
+  -m, --makefile        use makefile to nlint,default is true
+  -p PRE, --pre PRE     nlint order name in makefile module,default is make
+  -i INFO_ROOT, --info_root INFO_ROOT
+                        root path of infoy
+```
+
+makefile模式为生成一个makefile脚本，并将命令写入makefile中，随后以make命令运行脚本，使用`-p PRE`可以改变运行make的命令，默认为`make`。`-a`表示是否以macro模式运行，在macro模式下将不会检查子模块。
+
+该脚本所有结果保存在nlint_workspace文件夹中，若之前存在nlint_workspace文件夹则会将nlint_workspace删除。
+
+该脚本产生的makefile会生成在运行目录下，若原本存在makefile，则会将原有的makefile重命名为makefile_old，若原本存在makefile_old，则将其删除。
+
+## VCS仿真工具
+
+vcs进行仿真，位于`<root>/progen/eda_vcs.py`。运行脚本如下所示：
+
+```
+usage: eda_vcs.py [-h] [-s SIMMODE] [-m] [-p PRE] [-i INFO_ROOT] module
+
+positional arguments:
+  module                module name you want to nlint
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SIMMODE, --simmode SIMMODE
+                        simmode pre or post
+  -m, --makefile        use makefile to nlint,default is true
+  -p PRE, --pre PRE     nlint order name in makefile module,default is make
+  -i INFO_ROOT, --info_root INFO_ROOT
+                        root path of info
+```
+
+simmode用于指定rtl仿真、网表仿真还是后仿，目前仅支持rtl仿真，即`pre`（默认值）。其他行为与nlint脚本相同
+
+## verdi波形查看
+
+打开verdi进行代码查看，位于`<root>/progen/eda_verdi.py`，运行脚本如下所示：
+
+```
+usage: eda_verdi.py [-h] [-s SIMMODE] [-m] [-p PRE] [-i INFO_ROOT] module
+
+positional arguments:
+  module                module name you want to nlint
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SIMMODE, --simmode SIMMODE
+                        simmode pre or post
+  -m, --makefile        use makefile to nlint,default is true
+  -p PRE, --pre PRE     nlint order name in makefile module,default is make
+  -i INFO_ROOT, --info_root INFO_ROOT
+                        root path of info
+```
+
+参数说明和行为与nlint和vcs相同
