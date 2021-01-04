@@ -1,3 +1,4 @@
+// pro-gen:start here,coding before this line
 module test#(
 	parameter PE_COL = 12,
 	parameter PE_ROW = 12,
@@ -75,7 +76,7 @@ assign inst_test_b_clk = clk;
 assign inst_test_c_rst_n = rst_n;
 assign inst_test_c_clk = clk;
 
-//progen-spilt:work after here
+// pro-gen:stop here,coding after this line
 
 
 endmodule

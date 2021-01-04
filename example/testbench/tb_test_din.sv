@@ -1,3 +1,4 @@
+// pro-gen:start here,coding before this line
 module tb_test_din ();
 
 parameter DWIDTH = 16;
@@ -43,7 +44,7 @@ end
 assign clk = auto_tb_clock;
 assign rst_n = auto_tb_reset_n;
 
-//progen-spilt:work after here
+// pro-gen:stop here,coding after this line
 
 
 endmodule

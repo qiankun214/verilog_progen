@@ -1,3 +1,4 @@
+// pro-gen:start here,coding before this line
 module test_din#(
 	parameter DWIDTH = 16
 ) (
@@ -8,7 +9,7 @@ module test_din#(
 );
 
 
-//progen-spilt:work after here
+// pro-gen:stop here,coding after this line
 
 
 endmodule

@@ -1,6 +1,5 @@
 import os
 import argparse
-from os import path
 
 
 parser = argparse.ArgumentParser()
