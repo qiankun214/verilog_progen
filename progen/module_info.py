@@ -67,10 +67,10 @@ class module_info(object):
             p_type,p_width,_ = self.port[p]
             tmp = net_type
             if p_width.strip() != "1":
-                if "`" not in p_width:
-                    tmp += " [{}_{} - 1:0]".format(inst_name,p_width)
-                else:
+                if "`" in p_width or p_width.isdigit():
                     tmp += " [{} - 1:0]".format(p_width)
+                else:
+                    tmp += " [{}_{} - 1:0]".format(inst_name,p_width)
             tmp += " {}_{};".format(inst_name,p)
             inst.append(tmp)
 
