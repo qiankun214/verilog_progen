@@ -36,8 +36,9 @@ class depend_detector(object):
             dep_info_path = os.path.join(self.info_root,"{}.json".format(dep_name))
             if not os.path.exists(dep_info_path):
                 print("WARING:info of {} not exists,ignore submodule of it".format(dep))
-                self.depent_list.append(dep)
-                continue
+                if dep not in self.depent_list:
+                    self.depent_list.append(dep)
+                continue                
             self._ds_depend_find(self._read_json(dep_info_path))
 
     def _sv_depend_find(self,path):
