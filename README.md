@@ -3,7 +3,7 @@
 本项目用于直接通过可读的markdown文本生成rtl设计中需要使用的verilog模板和SystemVerilog的TB的模板，后续将添加其他功能。使用方法为按要求编写markdown文本，随后使用如下命令：
 
 ```shell
-python3 <root>/progen/progen -m <markdown path> -d <rtl root> -t <tb root>
+python3 <root>/progen/progen <markdown path> -d <rtl root> -t <tb root>
 ```
 
 同时可以使用如下指令查询：

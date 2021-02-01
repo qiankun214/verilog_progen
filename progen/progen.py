@@ -16,7 +16,7 @@ import os
 #     j2vsv(is_update)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-m", "--markdown", help="input markdown file path")
+parser.add_argument("markdown", help="input markdown file path")
 parser.add_argument("-t", "--tb", help="output testbench root",default="./testbench")
 parser.add_argument("-d", "--design", help="output rtl design root",default="./rtl")
 parser.add_argument("-u", "--noupdate",help="if your donnot want keep your work,use '-u'",action='store_false')
