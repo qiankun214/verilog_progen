@@ -3,16 +3,16 @@ module tb_test_din ();
 
 //instance dut module test_din
 parameter dut_DWIDTH = 16; // cannot find,use default
+logic dut_clk;
 logic dut_rst_n;
 logic dut_din_valid;
-logic dut_clk;
-logic [dut_DWIDTH - 1:0] dut_din_data;
+logic [2 * dut_DWIDTH + 3 - 1:0] dut_din_data;
 test_din #(
 	.DWIDTH(dut_DWIDTH)
 ) dut (
+	.clk(dut_clk),
 	.rst_n(dut_rst_n),
 	.din_valid(dut_din_valid),
-	.clk(dut_clk),
 	.din_data(dut_din_data)
 );
 

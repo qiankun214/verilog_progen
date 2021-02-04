@@ -2,44 +2,44 @@
 module tb_test ();
 
 //instance dut module test
-parameter dut_PE_COL = 12; // cannot find,use default
-parameter dut_PWIDTH = 4; // cannot find,use default
-parameter dut_AWIDTH = 16; // cannot find,use default
 parameter dut_DWIDTH = 16; // cannot find,use default
-parameter dut_PE_ROW = 12; // cannot find,use default
+parameter dut_AWIDTH = 16; // cannot find,use default
 parameter dut_OWIDTH = 8; // cannot find,use default
-logic dut_rst_n;
-logic [dut_POST_CWIDTH - 1:0] dut_cfg_post_data;
-logic [dut_DWIDTH * PE_ROW - 1:0] dut_outside_memory_dout;
+parameter dut_PWIDTH = 4; // cannot find,use default
+parameter dut_PE_ROW = 12; // cannot find,use default
+parameter dut_PE_COL = 12; // cannot find,use default
 logic dut_clk;
+logic dut_rst_n;
 logic dut_cfg_valid;
-logic [dut_TMPC_CWIDTH - 1:0] dut_cfg_tmpc_data;
-logic [dut_WICP_CWIDTH - 1:0] dut_cfg_wicp_data;
-logic [dut_DWIDTH * PE_ROW - 1:0] dut_outside_memory_din;
-logic [dut_DATA_CWIDTH - 1:0] dut_cfg_data_data;
-logic dut_outside_memory_wreq;
-logic [dut_AWIDTH - 1:0] dut_outside_memory_addr;
 logic dut_cfg_busy;
+logic [DATA_CWIDTH - 1:0] dut_cfg_data_data;
+logic [WICP_CWIDTH - 1:0] dut_cfg_wicp_data;
+logic [TMPC_CWIDTH - 1:0] dut_cfg_tmpc_data;
+logic [POST_CWIDTH - 1:0] dut_cfg_post_data;
+logic [dut_AWIDTH - 1:0] dut_outside_memory_addr;
+logic dut_outside_memory_wreq;
+logic [dut_DWIDTH * dut_PE_ROW - 1:0] dut_outside_memory_din;
+logic [dut_DWIDTH * dut_PE_ROW - 1:0] dut_outside_memory_dout;
 test #(
-	.PE_COL(dut_PE_COL),
-	.PWIDTH(dut_PWIDTH),
-	.AWIDTH(dut_AWIDTH),
 	.DWIDTH(dut_DWIDTH),
+	.AWIDTH(dut_AWIDTH),
+	.OWIDTH(dut_OWIDTH),
+	.PWIDTH(dut_PWIDTH),
 	.PE_ROW(dut_PE_ROW),
-	.OWIDTH(dut_OWIDTH)
+	.PE_COL(dut_PE_COL)
 ) dut (
-	.rst_n(dut_rst_n),
-	.cfg_post_data(dut_cfg_post_data),
-	.outside_memory_dout(dut_outside_memory_dout),
 	.clk(dut_clk),
+	.rst_n(dut_rst_n),
 	.cfg_valid(dut_cfg_valid),
-	.cfg_tmpc_data(dut_cfg_tmpc_data),
-	.cfg_wicp_data(dut_cfg_wicp_data),
-	.outside_memory_din(dut_outside_memory_din),
+	.cfg_busy(dut_cfg_busy),
 	.cfg_data_data(dut_cfg_data_data),
-	.outside_memory_wreq(dut_outside_memory_wreq),
+	.cfg_wicp_data(dut_cfg_wicp_data),
+	.cfg_tmpc_data(dut_cfg_tmpc_data),
+	.cfg_post_data(dut_cfg_post_data),
 	.outside_memory_addr(dut_outside_memory_addr),
-	.cfg_busy(dut_cfg_busy)
+	.outside_memory_wreq(dut_outside_memory_wreq),
+	.outside_memory_din(dut_outside_memory_din),
+	.outside_memory_dout(dut_outside_memory_dout)
 );
 
 logic auto_tb_clock,auto_tb_reset_n;

@@ -128,5 +128,7 @@ class tb_generator(ds_generator):
         ])
         with open(self.info.tb_path,'w') as f:
             f.write(self.content.replace("{}",tmp))
-
-
+    #TODO:添加生成program主体的代码,包括class实例化，终止条件和各个class起作用的initial块
+    #TODO:添加生成data class的代码
+    #TODO:添加生成driver class的代码
+    #TODO:添加生成monitor class的代码

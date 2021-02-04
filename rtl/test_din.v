@@ -3,10 +3,10 @@
 module test_din #(
 	parameter DWIDTH = 16
 ) (
+	input clk,
 	input rst_n,
 	input din_valid,
-	input clk,
-	input [DWIDTH - 1 : 0] din_data
+	input [2 * DWIDTH + 3 - 1 : 0] din_data
 );
 
 // link

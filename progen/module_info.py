@@ -53,6 +53,7 @@ class module_info(object):
         return "\n".join(data)
 
     def instance_gen(self, inst_name, parent_param={},net_type="wire"):
+        #DONE:修改位宽的生成方式，目前方式下若为位宽由参数计算获得会产生错误
         inst = ["\n//instance {} module {}".format(inst_name,self.name)]
         # parameter generate
         for key in self.parameter:
@@ -67,12 +68,15 @@ class module_info(object):
             p_type,p_width,_ = self.port[p]
             tmp = net_type
             if p_width.strip() != "1":
-                if "`" in p_width or p_width.isdigit():
-                    tmp += " [{} - 1:0]".format(p_width)
-                else:
-                    tmp += " [{}_{} - 1:0]".format(inst_name,p_width)
+                tmp += " [{} - 1:0]".format(self._parameter_instance(p_width,inst_name))
+                # if "`" in p_width or p_width.isdigit():
+                #     tmp += " [{} - 1:0]".format(p_width)
+                # else:
+                #     tmp += " [{}_{} - 1:0]".format(inst_name,p_width)
             tmp += " {}_{};".format(inst_name,p)
             inst.append(tmp)
+        # DEBUG:
+        # print(self.parameter)
 
         if len(self.parameter) == 0:
             inst.append("{} {} (".format(self.name,inst_name))
@@ -100,13 +104,19 @@ class module_info(object):
             result.append("assign {} = {};".format("_".join(ip),"_".join(op)))
         un_result = "// this on link:\n\t// {}".format("\n\t//".join(self.unlink))
         return "\n".join(result),un_result
+    
+    def _parameter_instance(self,width,inst):
+        for key in self.parameter:
+            width = width.replace(key,"{}_{}".format(inst,key))
+        return width
 
     def testbench_gen(self):
         pass
 
     def design_gen(self,link_text=""):
         pass
-
+    # TODO:添加生成interface的方法
+    # TODO:添加生成interface实例化和连接的方法
 if __name__=='__main__':
     test = module_info("./example/info/test.json")
     # print(test.moduledef_gen())

@@ -47,7 +47,7 @@
 | 实例化名    | 模块名    |
 | ----------- | --------- |
 | inst_test_b | test_din   |
-| inst_test_c | test_din   |
+| inst_test_c | test_dout   |
 
 
 > this is generate by linker
