@@ -1,4 +1,41 @@
 // pro-gen:start here,coding before this line
+interface dut_port #(
+	parameter dut_DWIDTH = 16,
+	parameter dut_AWIDTH = 16,
+	parameter dut_OWIDTH = 8,
+	parameter dut_PWIDTH = 4,
+	parameter dut_PE_ROW = 12,
+	parameter dut_PE_COL = 12
+)(
+	input clk,
+	input rst_n
+);
+	logic cfg_valid;
+	logic cfg_busy;
+	logic [DATA_CWIDTH - 1:0] cfg_data_data;
+	logic [WICP_CWIDTH - 1:0] cfg_wicp_data;
+	logic [TMPC_CWIDTH - 1:0] cfg_tmpc_data;
+	logic [POST_CWIDTH - 1:0] cfg_post_data;
+	logic [AWIDTH - 1:0] outside_memory_addr;
+	logic outside_memory_wreq;
+	logic [DWIDTH * PE_ROW - 1:0] outside_memory_din;
+	logic [DWIDTH * PE_ROW - 1:0] outside_memory_dout;
+
+	// manage timing in clocking block like this
+	clocking cb @(posedge clk);
+		output cfg_valid;
+		input cfg_busy;
+		output cfg_data_data;
+		output cfg_wicp_data;
+		output cfg_tmpc_data;
+		output cfg_post_data;
+		output outside_memory_addr;
+		output outside_memory_wreq;
+		output outside_memory_din;
+		input outside_memory_dout;
+	endclocking
+endinterface // port_dut
+
 module tb_test ();
 
 //instance dut module test
@@ -71,5 +108,32 @@ end
 assign dut_clk = auto_tb_clock;
 assign dut_rst_n = auto_tb_reset_n;
 
+port_dut#(
+	.DWIDTH(dut_DWIDTH),
+	.AWIDTH(dut_AWIDTH),
+	.OWIDTH(dut_OWIDTH),
+	.PWIDTH(dut_PWIDTH),
+	.PE_ROW(dut_PE_ROW),
+	.PE_COL(dut_PE_COL)
+) link_dut(dut_clk,dut_rst_n);
+assign cfg_valid = link_dut.cfg_valid;
+assign link_cfg_busy.dut = cfg_busy;
+assign cfg_data_data = link_dut.cfg_data_data;
+assign cfg_wicp_data = link_dut.cfg_wicp_data;
+assign cfg_tmpc_data = link_dut.cfg_tmpc_data;
+assign cfg_post_data = link_dut.cfg_post_data;
+assign outside_memory_addr = link_dut.outside_memory_addr;
+assign outside_memory_wreq = link_dut.outside_memory_wreq;
+assign outside_memory_din = link_dut.outside_memory_din;
+assign link_outside_memory_dout.dut = outside_memory_dout;
+
+testbench_dut#(
+	.DWIDTH(dut_DWIDTH),
+	.AWIDTH(dut_AWIDTH),
+	.OWIDTH(dut_OWIDTH),
+	.PWIDTH(dut_PWIDTH),
+	.PE_ROW(dut_PE_ROW),
+	.PE_COL(dut_PE_COL)
+) tb_dut (link_dut);
 // pro-gen:stop here,coding after this line
 endmodule

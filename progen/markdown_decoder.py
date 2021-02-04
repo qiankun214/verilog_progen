@@ -40,6 +40,7 @@ class parameter_decoder(source_decoder):
             result[name] = [defaultnum,comment]
         return result
 
+#TODO:增加两种类型端口：clock和reset
 class port_decoder(source_decoder):
     
     def __init__(self):

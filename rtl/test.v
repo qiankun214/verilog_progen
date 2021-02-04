@@ -58,19 +58,19 @@ assign inst_test_c_clk = clk;
 assign inst_test_b_rst_n = rst_n;
 assign inst_test_c_rst_n = rst_n;
 // this on link:
-	// test.outside_memory_addr
-	//test.cfg_wicp_data
-	//inst_test_c.din_valid
+	// inst_test_b.din_valid
+	//test.outside_memory_addr
 	//test.cfg_data_data
-	//inst_test_c.din_data
-	//test.outside_memory_din
-	//inst_test_b.din_data
+	//inst_test_c.din_valid
 	//test.cfg_post_data
-	//test.cfg_tmpc_data
-	//test.cfg_valid
 	//test.cfg_busy
-	//inst_test_b.din_valid
+	//test.cfg_valid
 	//test.outside_memory_dout
+	//test.cfg_wicp_data
+	//inst_test_c.din_data
+	//test.cfg_tmpc_data
+	//inst_test_b.din_data
+	//test.outside_memory_din
 	//test.outside_memory_wreq
 // pro-gen:stop here,coding after this line
 endmodule

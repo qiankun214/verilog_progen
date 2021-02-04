@@ -50,9 +50,11 @@ class ds_generator(object):
             with open(ds_path,'r') as f:
                 data = f.read().split("\n")
                 self.content = self._spilt_content(data)
+            self.is_first = False
         else:
             print("INFO:cannot find {} or define noupdate,write new".format(ds_path))
             self.content = self.initial_content
+            self.is_first = True
             return
         
     def _spilt_content(self,data):
@@ -119,16 +121,24 @@ class tb_generator(ds_generator):
         self.get_content(self.info.tb_path,is_use)
         tmp = "\n".join([
             LINE_START,
+            self.info.interface_gen("dut"),
+            "",
             "module tb_{} ();".format(self.info.name),
             self.info.instance_gen("dut",net_type="logic"),
             CLOCK_RSTN,
             FSDB.format(name=self.info.name),
             CLOCK_ASSIGN,
+            self.info.connet_inst_interface("dut"),
+            "",
+            self.info.testbench_instance_gen("dut"),
             LINE_STOP
         ])
         with open(self.info.tb_path,'w') as f:
             f.write(self.content.replace("{}",tmp))
     #TODO:添加生成program主体的代码,包括class实例化，终止条件和各个class起作用的initial块
+    # def program_gen(self,name,inst_name):
+        
+    
     #TODO:添加生成data class的代码
     #TODO:添加生成driver class的代码
     #TODO:添加生成monitor class的代码

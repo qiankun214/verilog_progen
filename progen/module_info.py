@@ -115,11 +115,84 @@ class module_info(object):
 
     def design_gen(self,link_text=""):
         pass
-    # TODO:添加生成interface的方法
-    # TODO:添加生成interface实例化和连接的方法
+    # DONE:添加生成interface的方法
+    def interface_gen(self,inst_name="dut"):
+        if len(self.parameter) != 0:
+            content = ["interface {}_port #(".format(inst_name)]
+            param_content = ["\tparameter {}_{} = {}".format(inst_name,x,self.parameter[x][0]) for x in self.parameter]
+            content.append(",\n".join(param_content))
+            content.append(")(")
+        else:
+            content = ["interface {}_port (".format(inst_name)]
+        content.append("\tinput clk,\n\tinput rst_n\n);")
+
+        # port
+        port_content = []
+        clock_content = ["\t// manage timing in clocking block like this\n\tclocking cb @(posedge clk);"]
+        for p in self.port:
+            if "clk" == p or "rst_n" == p:
+                continue
+            p_info = self.port[p]
+            if p_info[1] == "1":
+                port_content.append("\tlogic {};".format(p))
+            else:
+                port_content.append("\tlogic [{} - 1:0] {};".format(p_info[1],p))
+            if "input" in p_info[0]:
+                clock_content.append("\t\toutput {};".format(p))
+            else:
+                clock_content.append("\t\tinput {};".format(p))
+        content.append("\n".join(port_content))
+
+        # clocking block
+        clock_content.append("\tendclocking")
+        content.append("")
+        content.append("\n".join(clock_content))
+
+        # finish
+        content.append("endinterface // port_{}".format(inst_name))
+        # for debug
+        return "\n".join(content)
+
+    # DONE:添加生成interface实例化和连接的方法
+    def connet_inst_interface(self,inst_name="dut"):
+        content = []
+        if len(self.parameter) != 0:
+            head_content = ["port_{}#(".format(inst_name)]
+            param_content = ["\t.{}({}_{})".format(param,inst_name,param) for param in self.parameter]
+            head_content.append(",\n".join(param_content))
+            head_content.append(") link_{}({}_clk,{}_rst_n);".format(inst_name,inst_name,inst_name))
+            head_content = "\n".join(head_content)
+        else:
+            head_content = "port_{} link_{}({}_clk,{}_rst_n);".format(inst_name,inst_name,inst_name,inst_name)
+        content.append(head_content)
+
+        for p in self.port:
+            if p == "clk" or p == "rst_n":
+                continue
+            p_info = self.port[p]
+            if "input" in p_info:
+                content.append("assign {} = link_{}.{};".format(p,inst_name,p))
+            else:
+                content.append("assign link_{}.{} = {};".format(p,inst_name,p))
+
+        return "\n".join(content)
+
+    def testbench_instance_gen(self,inst_name):
+        if len(self.parameter) != 0:
+            head_content = ["testbench_{}#(".format(inst_name)]
+            param_content = ["\t.{}({}_{})".format(param,inst_name,param) for param in self.parameter]
+            head_content.append(",\n".join(param_content))
+            head_content.append(") tb_{} (link_{});".format(inst_name,inst_name))
+            head_content = "\n".join(head_content)
+        else:
+            head_content = "testbench_{} tb_{}(link_{}));".format(inst_name,inst_name,inst_name)
+        return head_content
+
+
 if __name__=='__main__':
-    test = module_info("./example/info/test.json")
+    test = module_info("./info/test.json")
     # print(test.moduledef_gen())
-    print(test.instance_gen("tse"))
-    print(test.input_port)
-    print(test.output_port)
+    # print(test.instance_gen("tse"))
+    # print(test.input_port)
+    # print(test.output_port)
+    print(test.connet_inst_interface())
