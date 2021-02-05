@@ -7,7 +7,6 @@ from ds_generator import ds_generator,tb_generator
 
 
 
-
 def markdown_analysis(path,rtl_root="./rtl",tb_root="./testbench",info_root="./info"):
     decoder = markdown_decoder()
     decoder.spilt_markdown(path)

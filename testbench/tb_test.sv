@@ -1,5 +1,5 @@
 // pro-gen:start here,coding before this line
-interface dut_port #(
+interface port_dut #(
 	parameter dut_DWIDTH = 16,
 	parameter dut_AWIDTH = 16,
 	parameter dut_OWIDTH = 8,
@@ -135,5 +135,16 @@ testbench_dut#(
 	.PE_ROW(dut_PE_ROW),
 	.PE_COL(dut_PE_COL)
 ) tb_dut (link_dut);
-// pro-gen:stop here,coding after this line
 endmodule
+
+program testbench_dut #(
+	parameter DWIDTH = 16,
+	parameter AWIDTH = 16,
+	parameter OWIDTH = 8,
+	parameter PWIDTH = 4,
+	parameter PE_ROW = 12,
+	parameter PE_COL = 12
+) ( port_dut port );
+// pro-gen:stop here,coding after this line
+
+endprogram

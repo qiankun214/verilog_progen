@@ -114,7 +114,7 @@ class tb_generator(ds_generator):
         tmp = "module tb_{} ();".format(self.info.name)
         self.initial_content = "\n".join([
             "{}",
-            "endmodule"
+            "\n\nendprogram"
         ])
 
     def __call__(self,is_use):
@@ -131,13 +131,19 @@ class tb_generator(ds_generator):
             self.info.connet_inst_interface("dut"),
             "",
             self.info.testbench_instance_gen("dut"),
+            "endmodule\n",
+            self.program_gen("dut"),
             LINE_STOP
         ])
         with open(self.info.tb_path,'w') as f:
             f.write(self.content.replace("{}",tmp))
     #TODO:添加生成program主体的代码,包括class实例化，终止条件和各个class起作用的initial块
-    # def program_gen(self,name,inst_name):
-        
+    def program_gen(self,inst_name):
+        module_name = "testbench_{}".format(inst_name)
+        content = self.info.define_head_generate("program",module_name)
+        content += " ( port_{} port );".format(inst_name)
+        return content
+
     
     #TODO:添加生成data class的代码
     #TODO:添加生成driver class的代码

@@ -118,7 +118,7 @@ class module_info(object):
     # DONE:添加生成interface的方法
     def interface_gen(self,inst_name="dut"):
         if len(self.parameter) != 0:
-            content = ["interface {}_port #(".format(inst_name)]
+            content = ["interface port_{} #(".format(inst_name)]
             param_content = ["\tparameter {}_{} = {}".format(inst_name,x,self.parameter[x][0]) for x in self.parameter]
             content.append(",\n".join(param_content))
             content.append(")(")
@@ -188,7 +188,16 @@ class module_info(object):
             head_content = "testbench_{} tb_{}(link_{}));".format(inst_name,inst_name,inst_name)
         return head_content
 
-
+    def define_head_generate(self,type_name,module_name):
+        if len(self.parameter) != 0:
+            head_content = ["{} {} #(".format(type_name,module_name)]
+            param_content = ["\tparameter {} = {}".format(param,self.parameter[param][0]) for param in self.parameter]
+            head_content.append(",\n".join(param_content))
+            head_content.append(")")
+            head_content = "\n".join(head_content)
+        else:
+            head_content = "{} {}".format(module_name,module_name)
+        return head_content
 if __name__=='__main__':
     test = module_info("./info/test.json")
     # print(test.moduledef_gen())
