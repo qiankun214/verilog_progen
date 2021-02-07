@@ -185,7 +185,7 @@ class module_info(object):
             head_content.append(") tb_{} (link_{});".format(inst_name,inst_name))
             head_content = "\n".join(head_content)
         else:
-            head_content = "testbench_{} tb_{}(link_{}));".format(inst_name,inst_name,inst_name)
+            head_content = "testbench_{} tb_{}(link_{});".format(inst_name,inst_name,inst_name)
         return head_content
 
     def define_head_generate(self,type_name,module_name):
@@ -196,7 +196,7 @@ class module_info(object):
             head_content.append(")")
             head_content = "\n".join(head_content)
         else:
-            head_content = "{} {}".format(module_name,module_name)
+            head_content = "{} {}".format(type_name,module_name)
         return head_content
 if __name__=='__main__':
     test = module_info("./info/test.json")
