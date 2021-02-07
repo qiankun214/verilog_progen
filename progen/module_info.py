@@ -123,7 +123,7 @@ class module_info(object):
             content.append(",\n".join(param_content))
             content.append(")(")
         else:
-            content = ["interface {}_port (".format(inst_name)]
+            content = ["interface port_{} (".format(inst_name)]
         content.append("\tinput clk,\n\tinput rst_n\n);")
 
         # port
@@ -171,9 +171,9 @@ class module_info(object):
                 continue
             p_info = self.port[p]
             if "input" in p_info:
-                content.append("assign {} = link_{}.{};".format(p,inst_name,p))
+                content.append("assign {}_{} = link_{}.{};".format(inst_name,p,inst_name,p))
             else:
-                content.append("assign link_{}.{} = {};".format(p,inst_name,p))
+                content.append("assign link_{}.{} = {}_{};".format(inst_name,p,inst_name,p))
 
         return "\n".join(content)
 
