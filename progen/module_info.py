@@ -30,6 +30,14 @@ class module_info(object):
         self.ds_path = info["ds_path"]
         self.unlink = info["unlink"]
         self.dependent = info["dependent"]
+        self.clock = info.get("clock")
+        if self.clock is None:
+            self.clock = ["clk"]
+            print("WARING:cannot find clock sign,use default 'clk'")
+        self.reset = info.get("reset")
+        if self.reset is None:
+            self.reset = ["rst_n"]
+            print("WARING:cannot find reset sign,use default 'rst_n'")
 
     def moduledef_gen(self):
         data = []
@@ -119,7 +127,7 @@ class module_info(object):
     def interface_gen(self,inst_name="dut"):
         if len(self.parameter) != 0:
             content = ["interface port_{} #(".format(inst_name)]
-            param_content = ["\tparameter {}_{} = {}".format(inst_name,x,self.parameter[x][0]) for x in self.parameter]
+            param_content = ["\tparameter {} = {}".format(x,self.parameter[x][0]) for x in self.parameter]
             content.append(",\n".join(param_content))
             content.append(")(")
         else:

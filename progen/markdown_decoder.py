@@ -40,7 +40,7 @@ class parameter_decoder(source_decoder):
             result[name] = [defaultnum,comment]
         return result
 
-#TODO:增加两种类型端口：clock和reset
+#DONE:增加两种类型端口：clock和reset
 class port_decoder(source_decoder):
     
     def __init__(self):
@@ -48,12 +48,31 @@ class port_decoder(source_decoder):
 
     def decode(self, content):
         port_list = self.table_handle(content)
-        result = {}
+        result,clock,reset = {},[],[]
         for name,dtype,width,comment in port_list:
             if result.get(name) is not None:
                 raise ValueError("FATAL:port {} is mult define")
+            # port type
+            if "input" in dtype:
+                dtype = "input"
+            elif "output" in dtype and "reg" in dtype:
+                dtype = "output reg"
+            elif "output" in dtype and "reg" not in dtype:
+                dtype = "output"
+            elif "clock" in dtype:
+                dtype = "input"
+                clock.append(name)
+            elif "reset" in dtype:
+                dtype = "input"
+                reset.append(name)
+            else:
+                raise ValueError("FATAL:undefined port type {} in port {}".format(dtype,name))
             result[name] = [dtype,width,comment]
-        return result
+        if len(clock) == 0:
+            print("WARING:clock not find")
+        if len(reset) == 0:
+            print("WARING:reset not find")
+        return result,clock,reset
 
 class dependent_decoder(source_decoder):
     
@@ -117,6 +136,8 @@ class markdown_decoder(object):
         self.submodule = None
         self.dependent = None
         self.link = None
+        self.clock = None
+        self.reset = None
 
         self.add_link = []
 
@@ -150,7 +171,7 @@ class markdown_decoder(object):
                 self.c_othre[-1] += "{link}"
 
     def decode(self):
-        self.port = self.d_port.decode(self.c_port)
+        self.port,self.clock,self.reset = self.d_port.decode(self.c_port)
         self.param = self.d_param.decode(self.c_param)
         self.submodule,self.link = self.d_link.decode(self.c_link)
         self.dependent = self.d_depen.decode(self.c_depen)
@@ -175,6 +196,8 @@ class markdown_decoder(object):
         info = {
             "name":self.name,
             "port":self.port,
+            "clock":self.clock,
+            "reset":self.reset,
             "parameter":self.param,
             "dependent":self.dependent,
             "submodule":self.submodule,

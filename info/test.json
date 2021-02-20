@@ -62,6 +62,12 @@
             "\u5916\u90e8\u5b58\u50a8\u5668\u8bfb\u6570\u636e"
         ]
     },
+    "clock": [
+        "clk"
+    ],
+    "reset": [
+        "rst_n"
+    ],
     "parameter": {
         "DWIDTH": [
             "16",
@@ -114,20 +120,20 @@
         ]
     ],
     "unlink": [
-        "test.cfg_post_data",
-        "inst_test_c.din_valid",
-        "inst_test_b.din_valid",
-        "test.outside_memory_wreq",
-        "test.outside_memory_din",
-        "inst_test_b.din_data",
-        "test.cfg_tmpc_data",
-        "inst_test_c.din_data",
-        "test.cfg_valid",
-        "test.cfg_wicp_data",
         "test.cfg_busy",
-        "test.cfg_data_data",
+        "inst_test_b.din_valid",
+        "test.outside_memory_din",
+        "inst_test_c.din_valid",
+        "test.cfg_valid",
+        "inst_test_b.din_data",
+        "inst_test_c.din_data",
+        "test.cfg_post_data",
         "test.outside_memory_dout",
-        "test.outside_memory_addr"
+        "test.outside_memory_wreq",
+        "test.outside_memory_addr",
+        "test.cfg_data_data",
+        "test.cfg_wicp_data",
+        "test.cfg_tmpc_data"
     ],
     "ds_path": "./rtl/test.v",
     "tb_path": "./testbench/tb_test.sv"
