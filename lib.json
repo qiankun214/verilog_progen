@@ -1,0 +1,26 @@
+{
+    "standcell": {
+        "fast_db": "",
+        "fast_tluplus": "",
+        "fast_condition": "",
+        "slow_db": "",
+        "slow_tluplus": "",
+        "slow_condition": "",
+        "symbol_sdb": "",
+        "tf_file": "",
+        "map_file": "",
+        "mw_path": ""
+    },
+    "io": {
+        "db_path": "",
+        "mw_path": ""
+    },
+    "macro": {
+        "db_path": [
+            ""
+        ],
+        "mw_path": [
+            ""
+        ]
+    }
+}
