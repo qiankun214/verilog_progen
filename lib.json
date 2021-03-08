@@ -1,6 +1,6 @@
 {
     "standcell": {
-        "fast_db": "",
+        "fast_db": "/app ",
         "fast_tluplus": "",
         "fast_condition": "",
         "slow_db": "",
