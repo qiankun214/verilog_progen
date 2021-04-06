@@ -1,26 +1,22 @@
 {
     "standcell": {
-        "fast_db": "/app ",
-        "fast_tluplus": "",
-        "fast_condition": "",
-        "slow_db": "",
-        "slow_tluplus": "",
-        "slow_condition": "",
+        "fast_db": "/app/PDK/axr90/library/stdcel/db/ff1p32vm40c/saed90nm_min.db",
+        "fast_tluplus": "/app/PDK/axr90/library/tech/icc/tluplus/saed90nm_1p9m_1t_Cmin_MF.itf.TLUPlus",
+        "fast_condition": "BEST",
+        "slow_db": "/app/PDK/axr90/library/stdcel/db/ss1p08v125c/saed90nm_max_hth.db",
+        "slow_tluplus": "/app/PDK/axr90/library/tech/icc/tluplus/saed90nm_1p9m_1t_Cmax_MF.itf.TLUPlus",
+        "slow_condition": "WORST",
         "symbol_sdb": "",
-        "tf_file": "",
-        "map_file": "",
-        "mw_path": ""
+        "tf_file": "/app/PDK/axr90/library/tech/icc/saed90nm_icc_1p9m.tf",
+        "map_file": "/app/PDK/axr90/library/tech/icc/tluplus/tech2itf.map",
+        "mw_path": "/app/PDK/axr90/library/stdcel/milkyway/saed90nm_dv"
     },
     "io": {
         "db_path": "",
         "mw_path": ""
     },
     "macro": {
-        "db_path": [
-            ""
-        ],
-        "mw_path": [
-            ""
-        ]
+        "db_path": [],
+        "mw_path": []
     }
 }

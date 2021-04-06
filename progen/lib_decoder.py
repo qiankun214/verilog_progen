@@ -23,11 +23,17 @@ class library_info(object):
                 self.__dict__[key] = data[node][key]
             else:
                 raise ValueError("FATAL:{} is not attr in standcell_info".format(key))
-    
-    def _check_lib_exists(self,path):
+    #DONE:添加waring型的库检查
+    def _check_lib_exists(self,path,level="error"):
         if not os.path.exists(path):
-            raise ValueError("FATAL:library {} not exists,please check it".format(path))
+            if level == "error":
+                raise ValueError("FATAL:library {} not exists,please check it".format(path))
+            elif level == "warning":
+                print("WARNING:library {} not exists,please check it".format(path))
+            else:
+                raise ValueError("FATAL:no define level {}".format(level))
         print("INFO: {} check finish".format(path))
+
 
 class standcell_info(library_info):
 
@@ -60,7 +66,7 @@ class standcell_info(library_info):
         self._check_lib_exists(self.fast_tluplus)
         self._check_lib_exists(self.slow_db)
         self._check_lib_exists(self.slow_tluplus)
-        self._check_lib_exists(self.symbol_sdb)
+        #self._check_lib_exists(self.symbol_sdb)
         self._check_lib_exists(self.tf_file)
         self._check_lib_exists(self.map_file)
         self._check_lib_exists(self.mw_path)
@@ -110,14 +116,18 @@ class compiler_lib_info(object):
         self.io_lib.load(self.path,"io")
         self.ma_lib.load(self.path,"macro")
 
+        #TODO:对某些可以没有的库进行若无不声明的处理
     def generate_lib_def(self):
         self.sc_lib.library_check()
         content = [
             "# library define",
-            'set target_library "{}"'.format(self.sc_lib.slow_db),
-            'set symbol_library "{}"'.format(self.sc_lib.symbol_sdb),
+            'set target_library "{}"'.format(self.sc_lib.slow_db)
             # "set FAST_DB {}".format(self.sc_lib.fast_db)
         ]
+        if len(self.sc_lib.symbol_sdb) == 0:
+            print("WARNING:not define symbol library")
+        else:
+            content.append('set symbol_library "{}"'.format(self.sc_lib.symbol_sdb))
         link_library = ["$target_library"]
         if len(self.io_lib.db_path) != 0:
             content.append("set IO_LIB {}".format(self.io_lib.db_path))
@@ -159,7 +169,7 @@ class compiler_lib_info(object):
             json.dump(data,f,indent=4) 
 
 if __name__ == "__main__":
-    test = compiler_lib_info("lib_gsmc13",".")
+    test = compiler_lib_info("lib",".")
     test.load()
     print(test.generate_lib_def())
     print(test.generate_mw_build("test"))

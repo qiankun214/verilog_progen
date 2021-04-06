@@ -1,5 +1,4 @@
-import os
-from os import name
+import os,shutil
 from module_info import module_info
 from markdown_decoder import markdown_decoder
 from link_pool import markdown_link
@@ -37,6 +36,23 @@ def testbench_generate(module,is_use,info_root="./info"):
     m = module_info(os.path.join(info_root,"{}.json".format(module)))
     tbg = tb_generator(m)
     tbg(is_use)
+
+def build_workspace(path):
+    if os.path.exists(path):
+        print("WARNING:dir {} exists,delete it".format(path))
+        shutil.rmtree(path)
+    os.mkdir(path)
+
+def write_makefile(order_name,order,work_path):
+    if os.path.exists("makefile"):
+        print("WARNING:makefile already exists,rename it as makefile_old")
+        if os.path.exists("makefile_old"):
+            os.remove("makefile_old")
+        os.rename("makefile","makefile_old")
+    with open("makefile",'w') as f:
+        f.write("{}:\n".format(order_name))
+        f.write("\t{}".format(order))
+    shutil.copy("makefile",os.path.join(work_path,"makefile"))
 
 if __name__ == "__main__":
     markdown_analysis("./inputs/test.md")
