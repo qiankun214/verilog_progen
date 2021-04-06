@@ -126,22 +126,24 @@ python3 script/filelistgen.py -v <模块名> -o <输出filelist路径> -t
 在前端工作完成后，需要将代码提交给后端进行正式的综合和物理实现，此时需要将所有代码打包到一个文件中，脚本`progen/submit.py`可实现该功能，用法为：
 
 ```shell
-usage: submit.py [-h] [-o OUTPUT] [-i INFO_ROOT] verilog
+usage: submit.py [-h] [-i INFO_ROOT] [-m] [-p PRE] verilog
 
 positional arguments:
   verilog               module name to submit
 
 optional arguments:
   -h, --help            show this help message and exit
-  -o OUTPUT, --output OUTPUT
-                        submit file root
   -i INFO_ROOT, --info_root INFO_ROOT
                         info root
+  -m, --makefile        use makefile to nlint,default is true
+  -p PRE, --pre PRE     nlint order name in makefile module,default is make
 ```
+
 `verilg`为要提供的模块名（不是文件路径），该脚本的行为如下所示：
 - 根据json文件分析依赖关系，生成filelist（不保存）
 - 根据filelist将所有依赖的代码顺序拼接到一起
-- 将结果保存在路径`<output>/SUBMIT_<verilog>.v`中，若该文件存在，则将原有文件改名为`<output>/SUBMIT_<verilog>.v.old`，若`<output>/SUBMIT_<verilog>.v.old`存在，则删除。
+- 将结果保存在路径`submit_workspace/SUBMIT_<verilog>.v`中，若`submit_workspace`已经存在，则将其删除后重建
+- 对提交结果进行nlint检查
 
 # EDA工具
 
