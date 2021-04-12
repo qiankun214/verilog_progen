@@ -308,4 +308,9 @@ optional arguments:
 
 下表表明指定了不同命令脚本的运行情况：
 
-| `-s`/`--script` | `-m`/`-makefile` | `-r`/`--run` | 更新脚本 | 更新
+| `-s`/`--script` | `-r`/`--run` | 更新脚本 | 更新文件 | 运行 |
+| --------------- | ------------ | -------- | -------- | ---- |
+| yes             | yes          | yes      | yes      | yes  |
+| yes             | no           | yes      | yes      | no   |
+| no              | yes          | no       | yes      | yes  |
+| no              | no           | no       | yes      | no   |
