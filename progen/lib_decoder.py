@@ -66,7 +66,7 @@ class standcell_info(library_info):
         self._check_lib_exists(self.fast_tluplus)
         self._check_lib_exists(self.slow_db)
         self._check_lib_exists(self.slow_tluplus)
-        #self._check_lib_exists(self.symbol_sdb)
+        self._check_lib_exists(self.symbol_sdb,"warning")
         self._check_lib_exists(self.tf_file)
         self._check_lib_exists(self.map_file)
         self._check_lib_exists(self.mw_path)
@@ -102,10 +102,10 @@ class io_info(library_info):
 
 class compiler_lib_info(object):
 
-    def __init__(self,name,save_root) -> None:
-        super().__init__()
-        self.name = name
-        self.path = os.path.join(save_root,"{}.json".format(name))
+    def __init__(self,path) -> None:
+        super(compiler_lib_info,self).__init__()
+        # self.name = name
+        self.path = path
 
         self.sc_lib = standcell_info()
         self.io_lib = io_info()
@@ -148,13 +148,13 @@ class compiler_lib_info(object):
             ref_mw.append('"{}"'.format(self.io_lib.mw_path))
         for mw in self.ma_lib.mw_path:
             ref_mw.append('"{}"'.format(mw))
-        content.append('set REF_MW [concat "*" {}]'.format(" ".join(ref_mw)))
-        content.append('create_mw_lib -technology "{}" -mw_reference_library $REF_MW {}'.format(self.sc_lib.tf_file,mw_path))
-        content.append('set_tlu_plus_files -max_tluplus "{}" -tch2itf_map "{}"'.format(self.sc_lib.slow_tluplus,self.sc_lib.map_file))
-        content.append("open_mw_lib {}".format(mw_path))
-        content.append('set_operating_conditions -max "{}" -max_library "{}" -min "{}" -min_library "{}"'.format(
-            self.sc_lib.slow_condition,self.sc_lib.slow_db,self.sc_lib.fast_condition,self.sc_lib.fast_db
-        ))
+        content.append('set REF_MW [concat {}]'.format(" ".join(ref_mw)))
+        content.append('create_mw_lib -technology "{}" -mw_reference_library $REF_MW "{}"'.format(self.sc_lib.tf_file,mw_path))
+        content.append('set_tlu_plus_files -max_tluplus "{}" -min_tluplus "{}"  -tech2itf_map "{}"'.format(self.sc_lib.slow_tluplus, self.sc_lib.fast_tluplus,self.sc_lib.map_file))
+        content.append('open_mw_lib "{}"'.format(mw_path))
+        # content.append('set_operating_conditions -max "{}" -max_library "{}" -min "{}" -min_library "{}"'.format(
+        #     self.sc_lib.slow_condition,self.sc_lib.slow_db,self.sc_lib.fast_condition,self.sc_lib.fast_db
+        # ))
         return "\n".join(content)
 
     def dump(self,is_io=False,is_macro=False):
@@ -169,7 +169,7 @@ class compiler_lib_info(object):
             json.dump(data,f,indent=4) 
 
 if __name__ == "__main__":
-    test = compiler_lib_info("lib",".")
+    test = compiler_lib_info("lib.json")
     test.load()
     print(test.generate_lib_def())
     print(test.generate_mw_build("test"))

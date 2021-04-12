@@ -7,9 +7,9 @@ def check_work_exisit(path):
 def generate_dc_readrtl(top_name,work_root,rtl_path):
     content = [
         "# read rtl and set svf",
-        'set_app_var html_log_enable true',
-        'set_app_var html_log_filename {}.html'.format(os.path.join(work_root,top_name)),
-        'set_svf  {}.svf'.format(work_root,top_name),
+        # 'set_app_var html_log_enable true',
+        # 'set_app_var html_log_filename "{}.html"'.format(os.path.join(work_root,top_name)),
+        'set_svf  {}.svf'.format(os.path.join(work_root,top_name)),
         'read_verilog {}'.format(rtl_path),
         'current_design {}'.format(top_name),
         'link',
@@ -28,6 +28,21 @@ group_path -name in2reg  -weight 3  -from [remove_from_collection [all_inputs] $
 group_path -name reg2reg -weight 5  -from [all_registers -clock_pins] -to [all_registers -data_pins]
 """
 
+def generate_dc_sdc(clock_cycle,clock_port,factor=0.3,input_factor=0.5,output_factor=0.5):
+    content = [
+        "set TRANSITION 0.4","",
+        "set_max_fanout 32 [current_design]",
+        "set_max_transition ${TRANSITION} [current_design]",""
+    ]
+    content.append("create_clock -name CLKMAIN [get_ports {}] -period {}".format(clock_port,clock_cycle))
+    content.append("set_clock_uncertainty -setup {} [all_clocks]".format(factor * clock_cycle))
+    content.append("set_clock_uncertainty -hold {} [all_clocks]".format(factor * clock_cycle))
+    content.append("set_clock_transition ${TRANSITION} [all_clocks]")
+    content.append("")
+    content.append('set_input_delay {} -clock CLKMAIN -add_delay -max [remove_from_collection [all_inputs] "{}"]'.format(clock_cycle * input_factor,clock_port))
+    content.append('set_output_delay {} -clock CLKMAIN -add_delay -max [all_outputs]'.format(clock_cycle * output_factor))
+    return "\n".join(content)
+
 def generate_dc_optimizer(top_name,work_root):
     log_name = os.path.join(work_root,top_name)
     content = [
@@ -44,9 +59,9 @@ def generate_dc_optimizer(top_name,work_root):
     ]
     return "\n".join(content)
 
-def generate_dc_wirteresult(top_name,work_root):
+def generate_dc_writeresult(top_name,work_root):
     log_name = os.path.join(work_root,top_name)
-    content = [
+    content = ["# write result",
         "set verilogout_no_tri TRUE",
         'define_name_rules cds_rules -allowed "A-Z a-z 0-9 _"',
         "change_names -rules cds_rules",
@@ -61,7 +76,7 @@ def generate_dc_wirteresult(top_name,work_root):
 
 def generate_dc_report(top_name,work_root):
     log_name = os.path.join(work_root,top_name)
-    content = [
+    content = ["# write report",
         "report_qor > {}_qor.rpt".format(log_name),
         "report_constraint -all_violators  {}_constraint.rpt".format(log_name),
         "report_timing -delay max -sort_by slack -path full -nworst 1 -max_paths 1000 -slack_lesser_than 0 > {}_postsyn_slack.rpt".format(log_name),

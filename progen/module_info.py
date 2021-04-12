@@ -206,6 +206,23 @@ class module_info(object):
         else:
             head_content = "{} {}".format(type_name,module_name)
         return head_content
+
+    # def dtype_portlist_generate(self):
+    #     input_port,output_port = [],[]
+    #     if len(self.clock) == 0:
+    #         raise ValueError("FATAL:clock not define")
+    #     for p in self.port:
+    #         port_info = self.port[p]
+    #         if "in" in port_info[0] and p not in self.clock:
+    #             input_port.append(p)
+    #         elif "out" in port_info[0]:
+    #             output_port.append(p)
+    #     return input_port,output_port
+    def get_clklist(self):
+        if len(self.clock) == 0:
+            raise ValueError("FATAL:clock not define")
+        return self.clock
+
 if __name__=='__main__':
     test = module_info("./info/test.json")
     # print(test.moduledef_gen())

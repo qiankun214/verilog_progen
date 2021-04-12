@@ -13,7 +13,7 @@ def submit_module_gen(module_name,root):
         with open(path,'r') as f:
             content_list.append(f.read())
         content_list.append("")
-    return "\n".join(content_list)
+    return filelist,"\n".join(content_list)
 
 def submit_module_write(module_name,content,save_root="."):
     target_path = os.path.join(save_root,"SUBMIT_{}.v".format(module_name))
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     build_workspace("submit_workspace")
-    result = submit_module_gen(args.verilog,args.info_root)
+    _,result = submit_module_gen(args.verilog,args.info_root)
     submit_module_write(args.verilog,result,"submit_workspace")
 
     # nlint check

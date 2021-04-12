@@ -152,7 +152,7 @@ EDA工具提供以下脚本：
 - [x] nLint代码风格检查
 - [x] VCS仿真
 - [x] Verdi波形查看
-- [ ] DC综合（正在开发）
+- [x] DC综合（正在开发）
 
 ## nLint代码检查
 
@@ -222,3 +222,90 @@ optional arguments:
 ```
 
 参数说明和行为与nlint和vcs相同
+
+## DC综合
+
+使用DC进行综合，综合前需要填写如下的json文件，json文件可以使用`progen/new_lib.py`脚本生成，该脚本的运行方法如下所示：
+
+```shell
+usage: new_lib.py [-h] [-s SAVE_ROOT] [-i] [-m] name
+
+positional arguments:
+  name                  name of lib
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SAVE_ROOT, --save_root SAVE_ROOT
+                        save path of json
+  -i, --io              need io or not,default not need
+  -m, --macro           need macro or not,default not need
+```
+
+其中，name表示库的名称，SAVE_ROOT为保存的路径，例如需要将json文件保存在`./lib/lib1.json`路径下，name应当为`lib1`，SAVE_ROOT应当为`./lib`。
+io和macro分别表示是否需要导入IO库和Marco cell，生成的json如下所示：
+
+```json
+{
+    "standcell": {
+        "fast_db": "延迟最小的库的db文件路径",
+        "fast_tluplus": "延迟最小的库的tluplus文件",
+        "fast_condition": "延迟最小的库中选择的condition",
+        "slow_db": "延迟最大的库的db文件路径",
+        "slow_tluplus": "延迟最大的库的tluplus文件",
+        "slow_condition": "延迟最大的库中选择的condition",
+        "symbol_sdb": "符号库文件路径（可以为空）",
+        "tf_file": "工艺tf文件路径",
+        "map_file": "tluplus的map文件路径",
+        "mw_path": "standcell的milkway文件夹路径"
+    },
+    "io": { // 若在生成时不添加`-i`则没有，io库功能尚未测试
+        "db_path": "io库的db文件路径",
+        "mw_path": "io库的milkway库路径"
+    },
+    "macro": { // 若在生成时不添加`-m`则没有，marco库功能尚未测试
+        "db_path": [], // 列表，macro cell的db库路径
+        "mw_path": []  // 列表，macro cell的milkway库路径
+    }
+}
+```
+
+用户需要填写上述json作为DC调用库的依据，使用dc综合的脚本如下所示，脚本位于`progen/eda_dc.py`：
+```shell
+usage: eda_dc.py [-h] [-n NAME] [-m] [-p PRE] [-i INFO_ROOT] [-r] [-s] [-c CYCLE] [--input INPUT] [--output OUTPUT] [--uncertainty UNCERTAINTY] lib_path
+
+positional arguments:
+  lib_path              path of lib json
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -n NAME, --name NAME  module name you want to syn
+  -m, --makefile        use makefile to nlint,default is true
+  -p PRE, --pre PRE     nlint order name in makefile module,default is make
+  -i INFO_ROOT, --info_root INFO_ROOT
+                        root path of info
+  -r, --run             run dc script,default is false
+  -s, --script          not rewrite script,default is true(no rewrite)
+  -c CYCLE, --cycle CYCLE
+                        clock cycle
+  --input INPUT         input delay factor
+  --output OUTPUT       output delay factor
+  --uncertainty UNCERTAINTY
+                        output delay factor
+```
+
+与其他不同的eda系列脚本不同的是：
+- `-r`/`--run`选项用于标记是否执行脚本，若不添加该命令，则将不会运行脚本（所有环境生成均会完成）
+- `-s`/`--script`选项用于标记是否重写覆盖原有的tcl脚本，若不添加该命令，则仅会重置环境、生成verilog和filelist文件，且保持原有的tcl综合脚本和sdc脚本不变
+- `-c`/`--cycle`用于输入时钟周期，单位为ns
+- `--input`/`--output`/`--uncertainty`用于指定input delay、output delay和时钟的uncertainty，其值为`cycle`和对应的factor相乘，例如input delay的实际值为`--cycle * --input`
+
+该脚本运行会进行如下操作：
+1. 建立`dc_workspace`目录，若已经有`dc_workspace`目录，则将其删除后重新建立。
+2. 根据`--name`指定的模块名，找到模块及其依赖，将其打包到一个文件，文件保存在`dc_workspace/input/<--name>.v`，同时生成filelist文件保存到`dc_workspace/input/<--name>.f`
+3. 生成dc运行脚本和sdc脚本（若没有标记`-s`则使用原有的脚本），保存到`dc_workspace/script`路径下
+4. （若不标记`-m`）生成makefile文件，若有makefile文件，则将其命名为`makefile_old`，再生成makefile，makefile的运行目标为`dc`
+5. （若标记`-r`）使用makefile运行DC过程，DC的输出保存在`dc_workspace/report`路径下，报告保存在`dc_workspace/report`路径下。
+
+下表表明指定了不同命令脚本的运行情况：
+
+| `-s`/`--script` | `-m`/`-makefile` | `-r`/`--run` | 更新脚本 | 更新
